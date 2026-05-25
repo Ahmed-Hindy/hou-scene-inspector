@@ -2,7 +2,9 @@
 
 from hip_reader.cpio import CpioEntry, CpioFormatError, read_entries
 from hip_reader.parsers import (
+    Channel,
     ChannelReference,
+    ChannelSegment,
     NodeDef,
     NodeFlags,
     NodeInit,
@@ -11,17 +13,23 @@ from hip_reader.parsers import (
     NodeStat,
     ParmTemplate,
     ParmValue,
+    Take,
+    parse_channels,
     parse_parms,
     parse_order,
     parse_spareparm_templates,
     parse_start,
+    parse_takes,
     parse_userdata,
     parse_variables,
 )
-from hip_reader.scene import HipFile, Node
+from hip_reader.scene import Connection, HipFile, Node
 
 __all__ = [
+    "Channel",
     "ChannelReference",
+    "ChannelSegment",
+    "Connection",
     "CpioEntry",
     "CpioFormatError",
     "HipFile",
@@ -34,10 +42,13 @@ __all__ = [
     "NodeStat",
     "ParmTemplate",
     "ParmValue",
+    "Take",
+    "parse_channels",
     "parse_parms",
     "parse_order",
     "parse_spareparm_templates",
     "parse_start",
+    "parse_takes",
     "parse_userdata",
     "parse_variables",
     "read_entries",

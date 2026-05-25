@@ -34,7 +34,9 @@ class NodeInit:
 class NodeFlags:
     """Common on/off flags parsed from a ``.def`` record."""
 
-    lock: bool = False
+    lock: str = "off"
+    locked: bool = False
+    hard_locked: bool = False
     bypass: bool = False
     display: bool = False
     render: bool = False
@@ -70,6 +72,54 @@ class NodeOutput:
 
     index: int
     name: str
+
+
+@dataclass(frozen=True)
+class ChannelSegment:
+    """One segment from a Houdini ``.chn`` channel block."""
+
+    length: float | None = None
+    values: tuple[float, ...] = ()
+    expression: str = ""
+    options: tuple[str, ...] = ()
+    raw: str = ""
+
+
+@dataclass(frozen=True)
+class Channel:
+    """Inspectable channel data parsed from a ``.chn`` record."""
+
+    name: str
+    left_type: str = ""
+    right_type: str = ""
+    default: float | None = None
+    flags: int | None = None
+    segments: tuple[ChannelSegment, ...] = ()
+    raw: str = ""
+
+    @property
+    def is_expression(self) -> bool:
+        """Return whether any segment stores a non-bezier expression."""
+
+        return any(
+            segment.expression and not segment.expression.startswith("bezier(")
+            for segment in self.segments
+        )
+
+    @property
+    def is_keyframed(self) -> bool:
+        """Return whether the channel contains more than a static expression."""
+
+        return len(self.segments) > 1 or any(segment.values for segment in self.segments)
+
+
+@dataclass(frozen=True)
+class Take:
+    """One take entry from the ``.takes`` record."""
+
+    name: str
+    child_count: int
+    raw: str = ""
 
 
 @dataclass(frozen=True)
@@ -208,7 +258,13 @@ class ParmTemplate:
 
     name: str
     label: str = ""
+    type_name: str = ""
+    default: tuple[str, ...] = ()
+    folder_name: str = ""
+    folder_label: str = ""
+    menu: tuple[tuple[str, str], ...] = ()
     baseparm: bool = False
+    tags: dict[str, str] = field(default_factory=dict)
     raw: str = ""
 
 
@@ -237,21 +293,30 @@ def parse_parms(text: str) -> dict[str, ParmValue]:
 
 
 def parse_spareparm_templates(text: str) -> list[ParmTemplate]:
-    """Parse lightweight names and labels from a ``.spareparmdef`` record."""
+    """Parse inspectable fields from a ``.spareparmdef`` record."""
 
     templates: list[ParmTemplate] = []
-    for block in _iter_named_blocks(text, "parm"):
-        name = _find_quoted_field(block, "name")
-        if not name:
-            continue
-        templates.append(
-            ParmTemplate(
-                name=name,
-                label=_find_quoted_field(block, "label"),
-                baseparm=bool(re.search(r"^\s*baseparm\s*$", block, re.MULTILINE)),
-                raw=block,
+    for group_block in _iter_named_blocks(text, "group"):
+        folder_name = _find_quoted_field(group_block, "name")
+        folder_label = _find_quoted_field(group_block, "label")
+        for block in _iter_named_blocks(group_block, "parm"):
+            name = _find_quoted_field(block, "name")
+            if not name:
+                continue
+            templates.append(
+                ParmTemplate(
+                    name=name,
+                    label=_find_quoted_field(block, "label"),
+                    type_name=_find_bare_field(block, "type"),
+                    default=tuple(_find_brace_values(block, "default")),
+                    folder_name=folder_name,
+                    folder_label=folder_label,
+                    menu=tuple(_find_menu_items(block)),
+                    baseparm=bool(re.search(r"^\s*baseparm\s*$", block, re.MULTILINE)),
+                    tags=_find_tags(block),
+                    raw=block,
+                )
             )
-        )
     return templates
 
 
@@ -328,6 +393,42 @@ def parse_start(text: str) -> dict[str, Any]:
         elif parts[0] == "fplayback":
             result["playback_raw"] = line.strip()
     return result
+
+
+def parse_channels(text: str) -> dict[str, Channel]:
+    """Parse a Houdini ``.chn`` record into channel objects."""
+
+    channels: dict[str, Channel] = {}
+    for name, block in _iter_named_channel_blocks(text):
+        channels[name] = Channel(
+            name=name,
+            left_type=_find_assignment(block, "lefttype"),
+            right_type=_find_assignment(block, "righttype"),
+            default=_coerce_optional_float(_find_assignment(block, "default")),
+            flags=_coerce_optional_int(_find_assignment(block, "flags")),
+            segments=tuple(_parse_channel_segments(block)),
+            raw=block,
+        )
+    return channels
+
+
+def parse_takes(text: str) -> list[Take]:
+    """Parse take names and child counts from the mixed ``.takes`` payload."""
+
+    takes: list[Take] = []
+    for match in re.finditer(r"take name (?P<name>\S+) kids (?P<count>\d+)", text):
+        start = match.start()
+        end = text.find("take name ", match.end())
+        if end == -1:
+            end = len(text)
+        takes.append(
+            Take(
+                name=match.group("name"),
+                child_count=int(match.group("count")),
+                raw=text[start:end],
+            )
+        )
+    return takes
 
 
 def parse_order(text: str) -> list[str]:
@@ -473,12 +574,19 @@ def _coerce_channel_reference(token: str) -> ChannelReference:
 def _parse_flags(line: str) -> NodeFlags:
     """Parse common on/off tokens from a ``flags =`` line."""
 
+    def value(name: str) -> str:
+        match = re.search(rf"\b{re.escape(name)}\s+(\S+)\b", line)
+        return match.group(1) if match else "off"
+
     def enabled(name: str) -> bool:
-        match = re.search(rf"\b{re.escape(name)}\s+(on|off)\b", line)
-        return bool(match and match.group(1) == "on")
+        return value(name) == "on"
+
+    lock = value("lock")
 
     return NodeFlags(
-        lock=enabled("lock"),
+        lock=lock,
+        locked=lock != "off",
+        hard_locked=lock == "hard",
         bypass=enabled("bypass"),
         display=enabled("display"),
         render=enabled("render"),
@@ -647,3 +755,154 @@ def _find_quoted_field(block: str, field_name: str) -> str:
 
     match = re.search(rf"^\s*{re.escape(field_name)}\s+\"([^\"]*)\"", block, re.MULTILINE)
     return match.group(1) if match else ""
+
+
+def _find_bare_field(block: str, field_name: str) -> str:
+    """Return a bare field value from a template block."""
+
+    match = re.search(rf"^\s*{re.escape(field_name)}\s+(\S+)", block, re.MULTILINE)
+    return match.group(1) if match else ""
+
+
+def _find_brace_values(block: str, field_name: str) -> list[str]:
+    """Return quoted or bare values from a simple field brace block."""
+
+    match = re.search(rf"^\s*{re.escape(field_name)}\s*\{{([^}}]*)\}}", block, re.MULTILINE)
+    if not match:
+        return []
+    return _split_houdini_tokens(match.group(1))
+
+
+def _find_menu_items(block: str) -> list[tuple[str, str]]:
+    """Return menu token/label pairs from a parameter template block."""
+
+    menu_start = re.search(r"^\s*menu\s*\{", block, re.MULTILINE)
+    if not menu_start:
+        return []
+    open_brace = block.find("{", menu_start.start())
+    close_brace = _find_matching_brace(block, open_brace)
+    if close_brace == -1:
+        return []
+    tokens = _split_houdini_tokens(block[open_brace + 1 : close_brace])
+    return [(tokens[index], tokens[index + 1]) for index in range(0, len(tokens) - 1, 2)]
+
+
+def _find_tags(block: str) -> dict[str, str]:
+    """Return known tag-style pairs from a template block."""
+
+    tags: dict[str, str] = {}
+    for match in re.finditer(r"^\s*(\w+tag)\s*\{([^}]*)\}", block, re.MULTILINE):
+        tokens = _split_houdini_tokens(match.group(2))
+        if len(tokens) >= 2:
+            tags[tokens[0]] = tokens[1]
+    return tags
+
+
+def _iter_named_channel_blocks(text: str) -> Iterable[tuple[str, str]]:
+    """Yield ``(name, block)`` pairs from a ``.chn`` payload."""
+
+    pattern = re.compile(r"^\s*channel\s+(\S+)\s*\{", re.MULTILINE)
+    for match in pattern.finditer(text):
+        open_brace = text.find("{", match.start())
+        close_brace = _find_matching_brace(text, open_brace)
+        if close_brace != -1:
+            yield match.group(1), text[match.start() : close_brace + 1]
+
+
+def _parse_channel_segments(block: str) -> list[ChannelSegment]:
+    """Parse all segment blocks inside one channel block."""
+
+    segments: list[ChannelSegment] = []
+    pattern = re.compile(r"\bsegment\s*\{")
+    for match in pattern.finditer(block):
+        open_brace = block.find("{", match.start())
+        close_brace = _find_matching_brace(block, open_brace)
+        if close_brace == -1:
+            continue
+        raw = block[match.start() : close_brace + 1]
+        segments.append(
+            ChannelSegment(
+                length=_coerce_optional_float(_find_numeric_assignment(raw, "length")),
+                values=tuple(
+                    _coerce_float(token)
+                    for token in _find_value_tokens(raw)
+                    if _is_float(token)
+                ),
+                expression=_find_expression(raw),
+                options=tuple(_find_segment_options(raw)),
+                raw=raw,
+            )
+        )
+    return segments
+
+
+def _find_assignment(text: str, name: str) -> str:
+    """Find a simple ``name = value`` assignment."""
+
+    match = re.search(rf"\b{re.escape(name)}\s*=\s*([^\n}}]+)", text)
+    return match.group(1).strip() if match else ""
+
+
+def _find_numeric_assignment(text: str, name: str) -> str:
+    """Find a numeric assignment where other fields may follow on the same line."""
+
+    match = re.search(rf"\b{re.escape(name)}\s*=\s*([^\s}}]+)", text)
+    return match.group(1).strip() if match else ""
+
+
+def _find_expression(text: str) -> str:
+    """Find a segment expression and trim one layer of quotes."""
+
+    expr = _find_assignment(text, "expr")
+    if len(expr) >= 2 and expr[0] == '"' and expr[-1] == '"':
+        return expr[1:-1].replace(r"\"", '"')
+    return expr
+
+
+def _find_value_tokens(text: str) -> list[str]:
+    """Find tokens from a segment ``value =`` assignment."""
+
+    match = re.search(r"\bvalue\s*=\s*([^e}\n]+)", text)
+    if not match:
+        return []
+    return _split_houdini_tokens(match.group(1))
+
+
+def _find_segment_options(text: str) -> list[str]:
+    """Find option tokens from a segment options block."""
+
+    match = re.search(r"\boptions\s*=\s*\{([^}]*)\}", text)
+    if not match:
+        return []
+    return _split_houdini_tokens(match.group(1))
+
+
+def _coerce_optional_float(value: str) -> float | None:
+    """Convert a string to float, preserving missing values as ``None``."""
+
+    return _coerce_float(value) if _is_float(value) else None
+
+
+def _coerce_optional_int(value: str) -> int | None:
+    """Convert a string to int, preserving missing values as ``None``."""
+
+    try:
+        return int(value)
+    except ValueError:
+        return None
+
+
+def _coerce_float(value: str) -> float:
+    """Convert a string to float."""
+
+    return float(value)
+
+
+def _is_float(value: str) -> bool:
+    """Return whether a string can be parsed as a float."""
+
+    try:
+        float(value)
+    except ValueError:
+        return False
+    return True

@@ -2,12 +2,11 @@
 
 Early Houdini-free `.hip` scene inspection experiments.
 
-The current reader handles the first useful layer of the format: Houdini `.hip`
-files saved by Houdini 21.0 are old portable CPIO archives whose record names
-mirror the operator tree. The package can list records, inspect global scene
-metadata, reconstruct a node hierarchy, and read node definitions, child order,
-simple SOP input/output connections, parameters, spare parameter template names,
-channel text, and observed string userdata.
+The current reader handles Houdini `.hip` files saved by Houdini 21.0 as old
+portable CPIO archives whose record names mirror the operator tree. The package
+can list records, inspect global metadata, reconstruct node hierarchy, resolve
+simple graph connections, parse parameters/channels/spare parameter templates,
+list takes, preserve binary records, and export JSON reports.
 
 It does not cook or evaluate Houdini networks.
 
@@ -27,14 +26,26 @@ print(box.parm("size"))
 ```
 
 ```powershell
-uv run hip-inspect records one_geo_with_box.hip
-uv run hip-inspect summary one_geo_with_box.hip
-uv run hip-inspect tree one_geo_with_box.hip
+uv run hip-inspect records tests/fixtures/hip/one_geo_with_box.hip
+uv run hip-inspect records --json tests/fixtures/hip/one_geo_with_box.hip
+uv run hip-inspect summary --json tests/fixtures/hip/merge_two_boxes.hip
+uv run hip-inspect tree tests/fixtures/hip/subnet_inside_geo.hip
+uv run hip-inspect node --json tests/fixtures/hip/animated_translate.hip /obj/geo1/xform1
+uv run hip-inspect dump-record tests/fixtures/hip/box_wired_xform.hip obj/geo1/transform1.def
 ```
+
+See [docs/compatibility.md](docs/compatibility.md) for the current supported
+surface and known unknowns.
 
 ## Development
 
 ```powershell
 uv sync
 uv run pytest
+```
+
+To regenerate the controlled fixture corpus with Houdini 21.0:
+
+```powershell
+& "C:\Program Files\Side Effects Software\Houdini 21.0.631\bin\hython.exe" tools/houdini/generate_fixtures.py
 ```

@@ -8,14 +8,20 @@ from pathlib import Path
 from typing import Any
 
 from hip_reader.cpio import CpioEntry, read_entries
+from hip_reader.jsonutil import json_safe
 from hip_reader.parsers import (
+    Channel,
     NodeDef,
+    NodeInput,
     ParmTemplate,
     ParmValue,
+    Take,
+    parse_channels,
     parse_parms,
     parse_order,
     parse_spareparm_templates,
     parse_start,
+    parse_takes,
     parse_userdata,
     parse_variables,
     NodeInit,
@@ -30,6 +36,8 @@ NODE_RECORD_EXTENSIONS = {
     ".userdata",
     ".net",
     ".order",
+    ".data",
+    ".datablocks",
 }
 
 IGNORED_GLOBAL_RECORDS = {
@@ -47,6 +55,19 @@ IGNORED_GLOBAL_RECORDS = {
 
 
 @dataclass
+class Connection:
+    """Resolved connection between two Houdini nodes."""
+
+    source_path: str
+    source_output: int
+    destination_path: str
+    destination_input: int
+    connector_id: int
+    name: str = ""
+    raw: NodeInput | None = None
+
+
+@dataclass
 class Node:
     """One Houdini operator node discovered in a .hip scene."""
 
@@ -56,10 +77,12 @@ class Node:
     parms: dict[str, ParmValue] = field(default_factory=dict)
     definition: NodeDef | None = None
     userdata: dict[str, Any] = field(default_factory=dict)
-    channels: str = ""
+    channels: dict[str, Channel] = field(default_factory=dict)
+    channel_text: str = ""
     spareparm_templates: list[ParmTemplate] = field(default_factory=list)
     net: str = ""
     child_order: list[str] = field(default_factory=list)
+    binary_records: dict[str, bytes] = field(default_factory=dict)
     record_names: set[str] = field(default_factory=set)
 
     @property
@@ -73,6 +96,18 @@ class Node:
         """Compatibility alias for ``definition``."""
 
         return self.definition
+
+    @property
+    def inputs(self) -> tuple[NodeInput, ...]:
+        """Return raw input metadata parsed from this node's ``.def`` record."""
+
+        return self.definition.inputs if self.definition is not None else ()
+
+    @property
+    def outputs(self) -> tuple[Any, ...]:
+        """Return raw output metadata parsed from this node's ``.def`` record."""
+
+        return self.definition.outputs if self.definition is not None else ()
 
     def parm(self, name: str) -> Any:
         """Return a parameter's coerced value, or ``None`` if missing."""
@@ -88,6 +123,36 @@ class Node:
             nodes.extend(child.walk())
         return nodes
 
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-friendly node representation."""
+
+        return {
+            "path": self.path,
+            "name": self.name,
+            "node_type": self.node_type,
+            "children": list(self.children),
+            "parms": {
+                name: {
+                    "index": parm.index,
+                    "locks": parm.locks,
+                    "raw_values": list(parm.raw_values),
+                    "value": json_safe(parm.value),
+                    "is_driven": parm.is_driven,
+                }
+                for name, parm in self.parms.items()
+            },
+            "definition": json_safe(self.definition),
+            "userdata": json_safe(self.userdata),
+            "channels": json_safe(self.channels),
+            "spareparm_templates": json_safe(self.spareparm_templates),
+            "net": self.net,
+            "child_order": self.child_order,
+            "binary_records": {
+                key: {"size": len(value)} for key, value in self.binary_records.items()
+            },
+            "record_names": sorted(self.record_names),
+        }
+
 
 @dataclass
 class HipFile:
@@ -97,7 +162,8 @@ class HipFile:
     records: list[CpioEntry] = field(default_factory=list)
     variables: dict[str, str] = field(default_factory=dict)
     start: dict[str, Any] = field(default_factory=dict)
-    takes: str = ""
+    takes: list[Take] = field(default_factory=list)
+    take_text: str = ""
     networks: dict[str, dict[str, Node]] = field(default_factory=dict)
     context_nodes: dict[str, Node] = field(default_factory=dict)
     unparsed_records: dict[str, CpioEntry] = field(default_factory=dict)
@@ -144,6 +210,12 @@ class HipFile:
 
         return self.start.get("time_range", (0.0, 10.0))
 
+    @property
+    def active_take(self) -> str:
+        """Return the active take recorded in global variables."""
+
+        return self.variables.get("ACTIVETAKE", "")
+
     @classmethod
     def load(cls, path: str | Path) -> "HipFile":
         """Load and inspect a Houdini .hip file without importing Houdini."""
@@ -158,7 +230,8 @@ class HipFile:
             elif entry.name == ".variables":
                 hip.variables = parse_variables(entry.text())
             elif entry.name == ".takes":
-                hip.takes = entry.text()
+                hip.take_text = entry.text()
+                hip.takes = parse_takes(hip.take_text)
             elif entry.name in IGNORED_GLOBAL_RECORDS:
                 hip.unparsed_records[entry.name] = entry
             else:
@@ -194,6 +267,59 @@ class HipFile:
                 nodes.extend(node.walk())
         return nodes
 
+    def connections(self) -> list[Connection]:
+        """Return resolved node graph connections."""
+
+        connections: list[Connection] = []
+        node_paths = {node.path for node in self.all_nodes()}
+        for node in self.all_nodes():
+            if node.definition is None:
+                continue
+            named_inputs = {
+                connection.index: connection for connection in node.definition.named_inputs
+            }
+            parent_path = posixpath.dirname(node.path)
+            for raw_input in node.definition.inputs:
+                source_path = posixpath.join(parent_path, raw_input.source_node)
+                if not source_path.startswith("/"):
+                    source_path = "/" + source_path
+                name = raw_input.name or named_inputs.get(raw_input.index, raw_input).name
+                if source_path not in node_paths:
+                    source_path = raw_input.source_node
+                connections.append(
+                    Connection(
+                        source_path=source_path,
+                        source_output=raw_input.source_output,
+                        destination_path=node.path,
+                        destination_input=raw_input.index,
+                        connector_id=raw_input.connector_id,
+                        name=name,
+                        raw=raw_input,
+                    )
+                )
+        return connections
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-friendly scene representation."""
+
+        return {
+            "path": str(self.path),
+            "houdini_version": self.houdini_version,
+            "save_platform": self.save_platform,
+            "save_time": self.save_time,
+            "fps": self.fps,
+            "current_frame": self.current_frame,
+            "frame_range": self.frame_range,
+            "time_range": self.time_range,
+            "active_take": self.active_take,
+            "variables": self.variables,
+            "records": len(self.records),
+            "nodes": [node.to_dict() for node in self.all_nodes()],
+            "connections": json_safe(self.connections()),
+            "takes": json_safe(self.takes),
+            "unparsed_records": sorted(self.unparsed_records),
+        }
+
     def _build_graph(self, raw_nodes: dict[str, dict[str, CpioEntry]]) -> None:
         """Build parent/child node relationships from archive record paths."""
 
@@ -214,7 +340,8 @@ class HipFile:
             if ".userdata" in records:
                 node.userdata = parse_userdata(records[".userdata"].content)
             if ".chn" in records:
-                node.channels = records[".chn"].text()
+                node.channel_text = records[".chn"].text()
+                node.channels = parse_channels(node.channel_text)
             if ".spareparmdef" in records:
                 node.spareparm_templates = parse_spareparm_templates(
                     records[".spareparmdef"].text()
@@ -223,6 +350,10 @@ class HipFile:
                 node.net = records[".net"].text()
             if ".order" in records:
                 node.child_order = parse_order(records[".order"].text())
+            if ".data" in records:
+                node.binary_records["data"] = records[".data"].content
+            if ".datablocks" in records:
+                node.binary_records["datablocks"] = records[".datablocks"].content
 
         for op_path, node in nodes.items():
             parent_path = posixpath.dirname(op_path)

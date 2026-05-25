@@ -48,6 +48,12 @@ class CpioEntry:
             return False
         return True
 
+    @property
+    def classification(self) -> str:
+        """Return a coarse payload classification for inspection reports."""
+
+        return classify_payload(self.name, self.content)
+
 
 class CpioFormatError(ValueError):
     """Raised when a file is not a valid old portable CPIO stream."""
@@ -129,3 +135,24 @@ def _read_octal(raw: bytes, field_name: str, offset: int) -> int:
         raise CpioFormatError(
             f"Invalid octal {field_name} field {value!r} at offset {offset}"
         ) from exc
+
+
+def classify_payload(name: str, content: bytes) -> str:
+    """Classify a CPIO entry payload without interpreting it deeply."""
+
+    if not content:
+        return "empty"
+    if name.endswith(".userdata"):
+        return "userdata"
+    if name.endswith((".data", ".datablocks")):
+        return "binary"
+    if b"\0" in content:
+        return "binary"
+    try:
+        text = content.decode("utf-8")
+    except UnicodeDecodeError:
+        return "binary"
+    stripped = text.lstrip()
+    if stripped.startswith("{") or stripped.startswith("["):
+        return "structured-text"
+    return "text"
