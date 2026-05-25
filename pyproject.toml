@@ -1,0 +1,22 @@
+[project]
+name = "hip-reader"
+version = "0.1.0"
+description = "Houdini-free .hip scene inspection experiments"
+readme = "README.md"
+authors = [
+    { name = "Ahmed Hindy", email = "Ahmed.hindy96@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+hip-inspect = "hip_reader.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.9.21,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
