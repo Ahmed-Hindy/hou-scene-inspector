@@ -315,9 +315,16 @@ class ParmTemplate:
     label: str = ""
     type_name: str = ""
     default: tuple[str, ...] = ()
+    range: tuple[str, ...] = ()
     folder_name: str = ""
     folder_label: str = ""
     menu: tuple[tuple[str, str], ...] = ()
+    export: str = ""
+    join_next: bool = False
+    no_label: bool = False
+    invisible: bool = False
+    disable_when: str = ""
+    hide_when: str = ""
     baseparm: bool = False
     tags: dict[str, str] = field(default_factory=dict)
     raw: str = ""
@@ -364,9 +371,16 @@ def parse_spareparm_templates(text: str) -> list[ParmTemplate]:
                     label=_find_quoted_field(block, "label"),
                     type_name=_find_bare_field(block, "type"),
                     default=tuple(_find_brace_values(block, "default")),
+                    range=tuple(_find_brace_values(block, "range")),
                     folder_name=folder_name,
                     folder_label=folder_label,
                     menu=tuple(_find_menu_items(block)),
+                    export=_find_bare_field(block, "export"),
+                    join_next=_has_bare_marker(block, "joinnext"),
+                    no_label=_has_bare_marker(block, "nolabel"),
+                    invisible=_has_bare_marker(block, "invisible"),
+                    disable_when=_find_quoted_field(block, "disablewhen"),
+                    hide_when=_find_quoted_field(block, "hidewhen"),
                     baseparm=bool(re.search(r"^\s*baseparm\s*$", block, re.MULTILINE)),
                     tags=_find_tags(block),
                     raw=block,
@@ -907,6 +921,12 @@ def _find_bare_field(block: str, field_name: str) -> str:
 
     match = re.search(rf"^\s*{re.escape(field_name)}\s+(\S+)", block, re.MULTILINE)
     return match.group(1) if match else ""
+
+
+def _has_bare_marker(block: str, field_name: str) -> bool:
+    """Return whether a marker line exists in a template block."""
+
+    return bool(re.search(rf"^\s*{re.escape(field_name)}\s*$", block, re.MULTILINE))
 
 
 def _find_brace_values(block: str, field_name: str) -> list[str]:

@@ -20,7 +20,8 @@ runtime.
 - Driven parameter links from `.parm` channel references to matching local
   `.chn` records.
 - Spare parameter template inspection for names, labels, type names, defaults,
-  folder labels, and menu item pairs.
+  ranges, folder labels, menu item pairs, common UI flags, export settings, and
+  observed hide/disable conditions.
 - Saved string userdata and preservation of unknown userdata type tags.
 - Binary payload preservation for records such as hard-locked SOP `.data`.
 - Take name, child-count, and observed parameter override chunks from `.takes`.

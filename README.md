@@ -32,6 +32,7 @@ uv run hip-inspect records --json tests/fixtures/hip/generated/one_geo_with_box.
 uv run hip-inspect summary --json tests/fixtures/hip/generated/merge_two_boxes.hip
 uv run hip-inspect tree tests/fixtures/hip/generated/subnet_inside_geo.hip
 uv run hip-inspect node --json tests/fixtures/hip/generated/animated_translate.hip /obj/geo1/xform1
+uv run hip-inspect spare-parms --json tests/fixtures/hip/generated/custom_spare_parms.hip /obj/geo1
 uv run hip-inspect channels tests/fixtures/hip/source_truth/animation_curve_variants.hip
 uv run hip-inspect takes tests/fixtures/hip/generated/two_takes_changed_parm.hip
 uv run hip-inspect diff-records tests/fixtures/hip/generated/empty.hip tests/fixtures/hip/generated/one_geo_node.hip

@@ -69,12 +69,24 @@ def test_custom_spareparm_templates_include_schema_fields() -> None:
     templates = {template.name: template for template in geo.spareparm_templates}
     custom_int = templates["custom_int"]
     custom_menu = templates["custom_menu"]
+    xord = templates["xOrd"]
+    rord = templates["rOrd"]
+    lookat = templates["lookatpath"]
+    velocity_blur = templates["geo_velocityblur"]
+    subd_style = templates["vm_subdstyle"]
 
     assert custom_int.folder_label == "Custom Folder"
     assert custom_int.type_name == "integer"
     assert custom_int.default == ("7",)
+    assert custom_int.range == ("0", "10")
     assert custom_menu.type_name == "ordinal"
     assert custom_menu.menu == (("a", "Option A"), ("b", "Option B"))
+    assert xord.export == "none"
+    assert xord.join_next
+    assert rord.no_label
+    assert lookat.invisible
+    assert velocity_blur.disable_when == "{ allowmotionblur == 0 }"
+    assert subd_style.hide_when == "{ vm_rendersubd == 0 }"
 
 
 def test_unknown_userdata_types_preserve_type_tag_and_raw_bytes() -> None:

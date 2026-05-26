@@ -36,6 +36,11 @@ def main() -> None:
     node_parser.add_argument("hip_file", type=Path)
     node_parser.add_argument("node_path")
 
+    spare_parser = subparsers.add_parser("spare-parms", help="List spare parm templates")
+    spare_parser.add_argument("--json", action="store_true", help="Output JSON")
+    spare_parser.add_argument("hip_file", type=Path)
+    spare_parser.add_argument("node_path")
+
     channels_parser = subparsers.add_parser("channels", help="List channels")
     channels_parser.add_argument("--json", action="store_true", help="Output JSON")
     channels_parser.add_argument("hip_file", type=Path)
@@ -61,6 +66,8 @@ def main() -> None:
         _print_tree(HipFile.load(args.hip_file), as_json=args.json)
     elif args.command == "node":
         _print_node_detail(HipFile.load(args.hip_file), args.node_path, as_json=args.json)
+    elif args.command == "spare-parms":
+        _print_spare_parms(HipFile.load(args.hip_file), args.node_path, as_json=args.json)
     elif args.command == "channels":
         _print_channels(HipFile.load(args.hip_file), as_json=args.json)
     elif args.command == "takes":
@@ -204,6 +211,46 @@ def _print_node_detail(hip: HipFile, node_path: str, *, as_json: bool = False) -
                 f"  {link.parm_name}[{link.component_index}] -> "
                 f"{link.channel_name} ({resolved})"
             )
+
+
+def _print_spare_parms(hip: HipFile, node_path: str, *, as_json: bool = False) -> None:
+    """Print spare parameter templates for one node."""
+
+    node = hip.node(node_path)
+    if node is None:
+        raise SystemExit(f"Node not found: {node_path}")
+    if as_json:
+        _print_json(node.spareparm_templates)
+        return
+    if not node.spareparm_templates:
+        print(f"No spare parm templates found on {node.path}")
+        return
+    for template in node.spareparm_templates:
+        flags = []
+        if template.baseparm:
+            flags.append("base")
+        if template.invisible:
+            flags.append("invisible")
+        if template.join_next:
+            flags.append("join-next")
+        if template.no_label:
+            flags.append("no-label")
+        suffix = f" [{' '.join(flags)}]" if flags else ""
+        type_name = template.type_name or "baseparm"
+        print(
+            f"{template.name}: {type_name} "
+            f"label={template.label!r} folder={template.folder_label!r}{suffix}"
+        )
+        if template.default:
+            print(f"  default={list(template.default)!r}")
+        if template.range:
+            print(f"  range={list(template.range)!r}")
+        if template.menu:
+            print(f"  menu={list(template.menu)!r}")
+        if template.disable_when:
+            print(f"  disablewhen={template.disable_when!r}")
+        if template.hide_when:
+            print(f"  hidewhen={template.hide_when!r}")
 
 
 def _print_channels(hip: HipFile, *, as_json: bool = False) -> None:

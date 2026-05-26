@@ -62,6 +62,22 @@ def test_node_and_tree_json_exports() -> None:
     assert tree_payload["obj"][0]["children"][0]["name"] == "subnet1"
 
 
+def test_spare_parms_json_exports_template_schema() -> None:
+    result = run_cli(
+        "spare-parms",
+        "--json",
+        str(FIXTURES / "custom_spare_parms.hip"),
+        "/obj/geo1",
+    )
+    payload = json.loads(result.stdout)
+    templates = {template["name"]: template for template in payload}
+
+    assert templates["custom_int"]["range"] == ["0", "10"]
+    assert templates["custom_menu"]["menu"] == [["a", "Option A"], ["b", "Option B"]]
+    assert templates["xOrd"]["join_next"]
+    assert templates["lookatpath"]["invisible"]
+
+
 def test_channels_takes_and_record_diff_json_exports() -> None:
     channels = run_cli("channels", "--json", str(FIXTURES / "animated_translate.hip"))
     takes = run_cli("takes", "--json", str(FIXTURES / "two_takes_changed_parm.hip"))
