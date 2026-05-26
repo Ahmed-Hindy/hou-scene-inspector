@@ -1,3 +1,4 @@
+import hashlib
 from pathlib import Path
 
 from hip_reader import HipFile
@@ -154,6 +155,15 @@ def test_contexts_subnets_binary_and_black_box_hda_placeholder() -> None:
     assert subnet.node("/obj/geo1/subnet1/xform1").inputs[0].source_node == "box1"
     assert locked.node("/obj/geo1/box1").definition.flags.hard_locked
     assert "data" in locked.node("/obj/geo1/box1").binary_records
+    binary_info = locked.node("/obj/geo1/box1").binary_record_infos()[0]
+    assert binary_info.record_name == "obj/geo1/box1.data"
+    assert binary_info.classification == "binary"
+    assert binary_info.size == len(locked.node("/obj/geo1/box1").binary_records["data"])
+    assert binary_info.sha256 == hashlib.sha256(
+        locked.node("/obj/geo1/box1").binary_records["data"]
+    ).hexdigest()
+    assert binary_info.preview_hex.startswith("7f 4e 53 4a")
+    assert locked.binary_record_summary() == [binary_info]
     assert hda.node("/obj/simple_hda1").node_type == "hip_reader_simple_hda::1.0"
     assert hda.node("/obj/simple_hda1").userdata["hda_fixture_note"] == "real hda instance"
     assert hda.node("/obj/simple_hda1/inner_geo").node_type == "geo"

@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import base64
+import hashlib
 import posixpath
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from hip_reader.cpio import CpioEntry, read_entries
+from hip_reader.cpio import CpioEntry, classify_payload, read_entries
 from hip_reader.jsonutil import json_safe
 from hip_reader.parsers import (
     Channel,
@@ -102,6 +104,21 @@ class DrivenParmLink:
 
 
 @dataclass
+class BinaryRecordInfo:
+    """Metadata-only summary for a binary node payload."""
+
+    node_path: str
+    record_name: str
+    semantic_name: str
+    size: int
+    classification: str
+    sha256: str
+    preview_size: int
+    preview_hex: str
+    preview_base64: str
+
+
+@dataclass
 class Node:
     """One Houdini operator node discovered in a .hip scene."""
 
@@ -187,6 +204,28 @@ class Node:
                 )
         return links
 
+    def binary_record_infos(self, preview_size: int = 16) -> list[BinaryRecordInfo]:
+        """Return metadata summaries for binary records attached to this node."""
+
+        summaries: list[BinaryRecordInfo] = []
+        for semantic_name, content in sorted(self.binary_records.items()):
+            record_name = f"{self.path.strip('/')}.{semantic_name}"
+            preview = content[:preview_size]
+            summaries.append(
+                BinaryRecordInfo(
+                    node_path=self.path,
+                    record_name=record_name,
+                    semantic_name=semantic_name,
+                    size=len(content),
+                    classification=classify_payload(record_name, content),
+                    sha256=hashlib.sha256(content).hexdigest(),
+                    preview_size=len(preview),
+                    preview_hex=preview.hex(" "),
+                    preview_base64=base64.b64encode(preview).decode("ascii"),
+                )
+            )
+        return summaries
+
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-friendly node representation."""
 
@@ -213,7 +252,8 @@ class Node:
             "net": self.net,
             "child_order": self.child_order,
             "binary_records": {
-                key: {"size": len(value)} for key, value in self.binary_records.items()
+                item.semantic_name: json_safe(item)
+                for item in self.binary_record_infos()
             },
             "record_names": sorted(self.record_names),
         }
@@ -404,6 +444,14 @@ class HipFile:
                 )
         return channel_rows
 
+    def binary_record_summary(self) -> list[BinaryRecordInfo]:
+        """Return metadata for all binary node payloads in the scene."""
+
+        summaries: list[BinaryRecordInfo] = []
+        for node in self.all_nodes():
+            summaries.extend(node.binary_record_infos())
+        return summaries
+
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-friendly scene representation."""
 
@@ -422,6 +470,7 @@ class HipFile:
             "nodes": [node.to_dict() for node in self.all_nodes()],
             "connections": json_safe(self.connections()),
             "channels": self.channel_summary(),
+            "binary_records": json_safe(self.binary_record_summary()),
             "driven_parameters": [
                 link.to_dict() for link in self.driven_parameters()
             ],

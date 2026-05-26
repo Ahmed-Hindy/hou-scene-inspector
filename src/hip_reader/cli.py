@@ -41,6 +41,11 @@ def main() -> None:
     spare_parser.add_argument("hip_file", type=Path)
     spare_parser.add_argument("node_path")
 
+    binary_parser = subparsers.add_parser("binary-records", help="List binary records")
+    binary_parser.add_argument("--json", action="store_true", help="Output JSON")
+    binary_parser.add_argument("hip_file", type=Path)
+    binary_parser.add_argument("node_path", nargs="?")
+
     channels_parser = subparsers.add_parser("channels", help="List channels")
     channels_parser.add_argument("--json", action="store_true", help="Output JSON")
     channels_parser.add_argument("hip_file", type=Path)
@@ -68,6 +73,12 @@ def main() -> None:
         _print_node_detail(HipFile.load(args.hip_file), args.node_path, as_json=args.json)
     elif args.command == "spare-parms":
         _print_spare_parms(HipFile.load(args.hip_file), args.node_path, as_json=args.json)
+    elif args.command == "binary-records":
+        _print_binary_records(
+            HipFile.load(args.hip_file),
+            node_path=args.node_path,
+            as_json=args.json,
+        )
     elif args.command == "channels":
         _print_channels(HipFile.load(args.hip_file), as_json=args.json)
     elif args.command == "takes":
@@ -251,6 +262,38 @@ def _print_spare_parms(hip: HipFile, node_path: str, *, as_json: bool = False) -
             print(f"  disablewhen={template.disable_when!r}")
         if template.hide_when:
             print(f"  hidewhen={template.hide_when!r}")
+
+
+def _print_binary_records(
+    hip: HipFile,
+    *,
+    node_path: str | None = None,
+    as_json: bool = False,
+) -> None:
+    """Print metadata-only summaries for binary node records."""
+
+    if node_path:
+        node = hip.node(node_path)
+        if node is None:
+            raise SystemExit(f"Node not found: {node_path}")
+        records = node.binary_record_infos()
+    else:
+        records = hip.binary_record_summary()
+    if as_json:
+        _print_json(records)
+        return
+    if not records:
+        target = node_path or str(hip.path)
+        print(f"No binary records found for {target}")
+        return
+    for record in records:
+        print(
+            f"{record.node_path} {record.semantic_name}: "
+            f"{record.size} bytes {record.classification} "
+            f"sha256={record.sha256}"
+        )
+        print(f"  record={record.record_name}")
+        print(f"  preview[{record.preview_size}]={record.preview_hex}")
 
 
 def _print_channels(hip: HipFile, *, as_json: bool = False) -> None:

@@ -23,7 +23,9 @@ runtime.
   ranges, folder labels, menu item pairs, common UI flags, export settings, and
   observed hide/disable conditions.
 - Saved string userdata and preservation of unknown userdata type tags.
-- Binary payload preservation for records such as hard-locked SOP `.data`.
+- Binary payload preservation and metadata reporting for records such as
+  hard-locked SOP `.data`: size, classification, SHA-256, and small byte
+  previews.
 - Take name, child-count, and observed parameter override chunks from `.takes`.
 - JSON exports for records, summary, tree, individual nodes, channels, takes,
   and record diffs.

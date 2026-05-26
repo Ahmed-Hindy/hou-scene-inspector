@@ -78,6 +78,26 @@ def test_spare_parms_json_exports_template_schema() -> None:
     assert templates["lookatpath"]["invisible"]
 
 
+def test_binary_records_json_exports_metadata_only() -> None:
+    result = run_cli(
+        "binary-records",
+        "--json",
+        str(FIXTURES / "locked_geometry_or_stash.hip"),
+    )
+    payload = json.loads(result.stdout)
+    record = payload[0]
+
+    assert record["node_path"] == "/obj/geo1/box1"
+    assert record["record_name"] == "obj/geo1/box1.data"
+    assert record["semantic_name"] == "data"
+    assert record["classification"] == "binary"
+    assert record["size"] > 100
+    assert len(record["sha256"]) == 64
+    assert record["preview_size"] == 16
+    assert record["preview_hex"].startswith("7f 4e 53 4a")
+    assert "content" not in record
+
+
 def test_channels_takes_and_record_diff_json_exports() -> None:
     channels = run_cli("channels", "--json", str(FIXTURES / "animated_translate.hip"))
     takes = run_cli("takes", "--json", str(FIXTURES / "two_takes_changed_parm.hip"))

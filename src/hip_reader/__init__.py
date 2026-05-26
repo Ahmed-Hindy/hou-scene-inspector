@@ -24,12 +24,13 @@ from hip_reader.parsers import (
     parse_userdata,
     parse_variables,
 )
-from hip_reader.scene import Connection, DrivenParmLink, HipFile, Node
+from hip_reader.scene import BinaryRecordInfo, Connection, DrivenParmLink, HipFile, Node
 
 __all__ = [
     "Channel",
     "ChannelReference",
     "ChannelSegment",
+    "BinaryRecordInfo",
     "Connection",
     "CpioEntry",
     "CpioFormatError",
