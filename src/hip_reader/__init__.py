@@ -14,6 +14,7 @@ from hip_reader.parsers import (
     ParmTemplate,
     ParmValue,
     Take,
+    TakeOverride,
     parse_channels,
     parse_parms,
     parse_order,
@@ -23,7 +24,7 @@ from hip_reader.parsers import (
     parse_userdata,
     parse_variables,
 )
-from hip_reader.scene import Connection, HipFile, Node
+from hip_reader.scene import Connection, DrivenParmLink, HipFile, Node
 
 __all__ = [
     "Channel",
@@ -32,6 +33,7 @@ __all__ = [
     "Connection",
     "CpioEntry",
     "CpioFormatError",
+    "DrivenParmLink",
     "HipFile",
     "Node",
     "NodeDef",
@@ -43,6 +45,7 @@ __all__ = [
     "ParmTemplate",
     "ParmValue",
     "Take",
+    "TakeOverride",
     "parse_channels",
     "parse_parms",
     "parse_order",

@@ -11,6 +11,7 @@ from hip_reader.cpio import CpioEntry, read_entries
 from hip_reader.jsonutil import json_safe
 from hip_reader.parsers import (
     Channel,
+    ChannelReference,
     NodeDef,
     NodeInput,
     ParmTemplate,
@@ -65,6 +66,39 @@ class Connection:
     connector_id: int
     name: str = ""
     raw: NodeInput | None = None
+
+
+@dataclass
+class DrivenParmLink:
+    """A parameter component that points at a channel record."""
+
+    node_path: str
+    parm_name: str
+    component_index: int
+    channel_name: str
+    default: Any
+    raw: str
+    channel: Channel | None = None
+
+    @property
+    def is_resolved(self) -> bool:
+        """Return whether the referenced channel exists on the node."""
+
+        return self.channel is not None
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a compact JSON-friendly representation."""
+
+        return {
+            "node_path": self.node_path,
+            "parm_name": self.parm_name,
+            "component_index": self.component_index,
+            "channel_name": self.channel_name,
+            "default": json_safe(self.default),
+            "raw": self.raw,
+            "is_resolved": self.is_resolved,
+            "channel": json_safe(self.channel),
+        }
 
 
 @dataclass
@@ -123,6 +157,36 @@ class Node:
             nodes.extend(child.walk())
         return nodes
 
+    def driven_parm_links(self) -> list[DrivenParmLink]:
+        """Return driven parameter components linked to local channels when present."""
+
+        links: list[DrivenParmLink] = []
+        for parm_name, parm in self.parms.items():
+            values = parm.value
+            if isinstance(values, ChannelReference):
+                references = [(0, values)]
+            elif isinstance(values, list):
+                references = [
+                    (index, value)
+                    for index, value in enumerate(values)
+                    if isinstance(value, ChannelReference)
+                ]
+            else:
+                references = []
+            for component_index, reference in references:
+                links.append(
+                    DrivenParmLink(
+                        node_path=self.path,
+                        parm_name=parm_name,
+                        component_index=component_index,
+                        channel_name=reference.name,
+                        default=reference.default,
+                        raw=reference.raw,
+                        channel=self.channels.get(reference.name),
+                    )
+                )
+        return links
+
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-friendly node representation."""
 
@@ -144,6 +208,7 @@ class Node:
             "definition": json_safe(self.definition),
             "userdata": json_safe(self.userdata),
             "channels": json_safe(self.channels),
+            "driven_parms": [link.to_dict() for link in self.driven_parm_links()],
             "spareparm_templates": json_safe(self.spareparm_templates),
             "net": self.net,
             "child_order": self.child_order,
@@ -231,7 +296,7 @@ class HipFile:
                 hip.variables = parse_variables(entry.text())
             elif entry.name == ".takes":
                 hip.take_text = entry.text()
-                hip.takes = parse_takes(hip.take_text)
+                hip.takes = parse_takes(entry.content)
             elif entry.name in IGNORED_GLOBAL_RECORDS:
                 hip.unparsed_records[entry.name] = entry
             else:
@@ -299,6 +364,46 @@ class HipFile:
                 )
         return connections
 
+    def driven_parameters(self) -> list[DrivenParmLink]:
+        """Return all driven parameters in the scene."""
+
+        links: list[DrivenParmLink] = []
+        for node in self.all_nodes():
+            links.extend(node.driven_parm_links())
+        return links
+
+    def channel_summary(self) -> list[dict[str, Any]]:
+        """Return a compact scene-wide channel report."""
+
+        channel_rows: list[dict[str, Any]] = []
+        driven_by_node = {}
+        for link in self.driven_parameters():
+            driven_by_node.setdefault((link.node_path, link.channel_name), []).append(link)
+
+        for node in self.all_nodes():
+            for name, channel in node.channels.items():
+                links = driven_by_node.get((node.path, name), [])
+                channel_rows.append(
+                    {
+                        "node_path": node.path,
+                        "channel_name": name,
+                        "is_keyframed": channel.is_keyframed,
+                        "is_expression": channel.is_expression,
+                        "segments": len(channel.segments),
+                        "driven_parms": [
+                            {
+                                "parm_name": link.parm_name,
+                                "component_index": link.component_index,
+                                "default": json_safe(link.default),
+                                "raw": link.raw,
+                            }
+                            for link in links
+                        ],
+                        "channel": json_safe(channel),
+                    }
+                )
+        return channel_rows
+
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-friendly scene representation."""
 
@@ -316,6 +421,10 @@ class HipFile:
             "records": len(self.records),
             "nodes": [node.to_dict() for node in self.all_nodes()],
             "connections": json_safe(self.connections()),
+            "channels": self.channel_summary(),
+            "driven_parameters": [
+                link.to_dict() for link in self.driven_parameters()
+            ],
             "takes": json_safe(self.takes),
             "unparsed_records": sorted(self.unparsed_records),
         }

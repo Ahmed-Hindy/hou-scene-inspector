@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import argparse
 import base64
+import hashlib
 import json
 from pathlib import Path
 
-from hip_reader.cpio import read_entries
+from hip_reader.cpio import CpioEntry, read_entries
 from hip_reader.jsonutil import json_safe
 from hip_reader.scene import HipFile, Node
 
@@ -35,10 +36,23 @@ def main() -> None:
     node_parser.add_argument("hip_file", type=Path)
     node_parser.add_argument("node_path")
 
+    channels_parser = subparsers.add_parser("channels", help="List channels")
+    channels_parser.add_argument("--json", action="store_true", help="Output JSON")
+    channels_parser.add_argument("hip_file", type=Path)
+
+    takes_parser = subparsers.add_parser("takes", help="List takes")
+    takes_parser.add_argument("--json", action="store_true", help="Output JSON")
+    takes_parser.add_argument("hip_file", type=Path)
+
     dump_parser = subparsers.add_parser("dump-record", help="Dump one CPIO record")
     dump_parser.add_argument("--json", action="store_true", help="Output JSON")
     dump_parser.add_argument("hip_file", type=Path)
     dump_parser.add_argument("record_name")
+
+    diff_parser = subparsers.add_parser("diff-records", help="Diff archive records")
+    diff_parser.add_argument("--json", action="store_true", help="Output JSON")
+    diff_parser.add_argument("left", type=Path)
+    diff_parser.add_argument("right", type=Path)
 
     args = parser.parse_args()
     if args.command == "records":
@@ -47,8 +61,14 @@ def main() -> None:
         _print_tree(HipFile.load(args.hip_file), as_json=args.json)
     elif args.command == "node":
         _print_node_detail(HipFile.load(args.hip_file), args.node_path, as_json=args.json)
+    elif args.command == "channels":
+        _print_channels(HipFile.load(args.hip_file), as_json=args.json)
+    elif args.command == "takes":
+        _print_takes(HipFile.load(args.hip_file), as_json=args.json)
     elif args.command == "dump-record":
         _dump_record(args.hip_file, args.record_name, as_json=args.json)
+    elif args.command == "diff-records":
+        _diff_records(args.left, args.right, as_json=args.json)
     else:
         hip_file = getattr(args, "hip_file", None)
         if hip_file is None:
@@ -167,8 +187,68 @@ def _print_node_detail(hip: HipFile, node_path: str, *, as_json: bool = False) -
             print(f"  {name}: {parm.value!r}")
     if node.channels:
         print("channels:")
-        for name in node.channels:
-            print(f"  {name}")
+        for name, channel in node.channels.items():
+            labels = []
+            if channel.is_keyframed:
+                labels.append("keyframed")
+            if channel.is_expression:
+                labels.append("expression")
+            suffix = f" ({', '.join(labels)})" if labels else ""
+            print(f"  {name}: {len(channel.segments)} segment(s){suffix}")
+    links = node.driven_parm_links()
+    if links:
+        print("driven parms:")
+        for link in links:
+            resolved = "resolved" if link.is_resolved else "unresolved"
+            print(
+                f"  {link.parm_name}[{link.component_index}] -> "
+                f"{link.channel_name} ({resolved})"
+            )
+
+
+def _print_channels(hip: HipFile, *, as_json: bool = False) -> None:
+    """Print channel and driven-parameter information."""
+
+    rows = hip.channel_summary()
+    if as_json:
+        _print_json(rows)
+        return
+    if not rows:
+        print("No channels found")
+        return
+    for row in rows:
+        labels = []
+        if row["is_keyframed"]:
+            labels.append("keyframed")
+        if row["is_expression"]:
+            labels.append("expression")
+        suffix = f" ({', '.join(labels)})" if labels else ""
+        print(
+            f"{row['node_path']} {row['channel_name']}: "
+            f"{row['segments']} segment(s){suffix}"
+        )
+        for link in row["driven_parms"]:
+            print(
+                f"  drives {link['parm_name']}[{link['component_index']}] "
+                f"default={link['default']!r}"
+            )
+
+
+def _print_takes(hip: HipFile, *, as_json: bool = False) -> None:
+    """Print take hierarchy and observed parameter overrides."""
+
+    if as_json:
+        _print_json(hip.takes)
+        return
+    if not hip.takes:
+        print("No takes found")
+        return
+    for take in hip.takes:
+        print(f"{take.name} children={take.child_count}")
+        for override in take.overrides:
+            print(f"  override {override.path} {override.parm}")
+            for parm_name, parm in override.parms.items():
+                print(f"    {parm_name}: {parm.value!r}")
 
 
 def _dump_record(path: Path, record_name: str, *, as_json: bool = False) -> None:
@@ -178,12 +258,13 @@ def _dump_record(path: Path, record_name: str, *, as_json: bool = False) -> None
         if entry.name != record_name:
             continue
         if as_json:
+            is_text = entry.classification in {"text", "structured-text"}
             _print_json(
                 {
                     "name": entry.name,
                     "size": entry.size,
                     "classification": entry.classification,
-                    "text": entry.text() if entry.classification != "binary" else None,
+                    "text": entry.text() if is_text else None,
                     "content": {
                         "encoding": "base64",
                         "data": base64.b64encode(entry.content).decode("ascii"),
@@ -191,12 +272,79 @@ def _dump_record(path: Path, record_name: str, *, as_json: bool = False) -> None
                 }
             )
             return
-        if entry.classification == "binary":
+        if entry.classification not in {"text", "structured-text"}:
             print(entry.content.hex(" "))
         else:
             print(entry.text(), end="")
         return
     raise SystemExit(f"Record not found: {record_name}")
+
+
+def _diff_records(left: Path, right: Path, *, as_json: bool = False) -> None:
+    """Print a record-level diff between two CPIO archives."""
+
+    payload = _record_diff(left, right)
+    if as_json:
+        _print_json(payload)
+        return
+    for name in payload["removed"]:
+        print(f"removed {name}")
+    for name in payload["added"]:
+        print(f"added {name}")
+    for item in payload["changed"]:
+        print(
+            f"changed {item['name']} "
+            f"{item['left_size']} -> {item['right_size']} bytes"
+        )
+    print(f"unchanged {payload['unchanged_count']}")
+
+
+def _record_diff(left: Path, right: Path) -> dict[str, object]:
+    """Return a scriptable record diff payload."""
+
+    left_records = {entry.name: entry for entry in read_entries(left)}
+    right_records = {entry.name: entry for entry in read_entries(right)}
+    left_names = set(left_records)
+    right_names = set(right_records)
+    changed = []
+    unchanged = 0
+    for name in sorted(left_names & right_names):
+        left_entry = left_records[name]
+        right_entry = right_records[name]
+        if _entry_digest(left_entry) == _entry_digest(right_entry):
+            unchanged += 1
+            continue
+        changed.append(
+            {
+                "name": name,
+                "left_size": left_entry.size,
+                "right_size": right_entry.size,
+                "left_hash": _entry_hash(left_entry),
+                "right_hash": _entry_hash(right_entry),
+                "left_classification": left_entry.classification,
+                "right_classification": right_entry.classification,
+            }
+        )
+    return {
+        "left": str(left),
+        "right": str(right),
+        "added": sorted(right_names - left_names),
+        "removed": sorted(left_names - right_names),
+        "changed": changed,
+        "unchanged_count": unchanged,
+    }
+
+
+def _entry_digest(entry: CpioEntry) -> tuple[int, str]:
+    """Return size and content hash for fast equality checks."""
+
+    return entry.size, _entry_hash(entry)
+
+
+def _entry_hash(entry: CpioEntry) -> str:
+    """Return the SHA-256 hash of a record payload."""
+
+    return hashlib.sha256(entry.content).hexdigest()
 
 
 def _node_tree_dict(node: Node) -> dict[str, object]:

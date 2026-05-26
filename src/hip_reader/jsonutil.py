@@ -11,6 +11,9 @@ from typing import Any
 def json_safe(value: Any) -> Any:
     """Convert supported Python objects into JSON-compatible values."""
 
+    to_dict = getattr(value, "to_dict", None)
+    if callable(to_dict):
+        return json_safe(to_dict())
     if is_dataclass(value):
         return {key: json_safe(item) for key, item in asdict(value).items()}
     if isinstance(value, bytes):

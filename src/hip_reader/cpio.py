@@ -142,6 +142,8 @@ def classify_payload(name: str, content: bytes) -> str:
 
     if not content:
         return "empty"
+    if name == ".takes":
+        return "take-data"
     if name.endswith(".userdata"):
         return "userdata"
     if name.endswith((".data", ".datablocks")):

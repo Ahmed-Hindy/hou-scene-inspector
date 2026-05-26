@@ -119,7 +119,20 @@ class Take:
 
     name: str
     child_count: int
+    overrides: tuple["TakeOverride", ...] = ()
+    raw_chunks: tuple[str, ...] = ()
     raw: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-friendly take representation."""
+
+        return {
+            "name": self.name,
+            "child_count": self.child_count,
+            "overrides": [override.to_dict() for override in self.overrides],
+            "raw_chunks": list(self.raw_chunks),
+            "raw": self.raw,
+        }
 
 
 @dataclass(frozen=True)
@@ -250,6 +263,46 @@ class ParmValue:
         if isinstance(values, list):
             return any(isinstance(value, ChannelReference) for value in values)
         return False
+
+    @property
+    def channel_references(self) -> tuple[ChannelReference, ...]:
+        """Return channel references embedded in this parameter value."""
+
+        values = self.value
+        if isinstance(values, ChannelReference):
+            return (values,)
+        if isinstance(values, list):
+            return tuple(value for value in values if isinstance(value, ChannelReference))
+        return ()
+
+
+@dataclass(frozen=True)
+class TakeOverride:
+    """One parameter override payload embedded in a take."""
+
+    path: str
+    parm: str
+    parms: dict[str, ParmValue] = field(default_factory=dict)
+    raw: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-friendly take override representation."""
+
+        return {
+            "path": self.path,
+            "parm": self.parm,
+            "parms": {
+                name: {
+                    "index": parm.index,
+                    "locks": parm.locks,
+                    "raw_values": list(parm.raw_values),
+                    "value": parm.value,
+                    "is_driven": parm.is_driven,
+                }
+                for name, parm in self.parms.items()
+            },
+            "raw": self.raw,
+        }
 
 
 @dataclass(frozen=True)
@@ -412,20 +465,53 @@ def parse_channels(text: str) -> dict[str, Channel]:
     return channels
 
 
-def parse_takes(text: str) -> list[Take]:
-    """Parse take names and child counts from the mixed ``.takes`` payload."""
+def parse_takes(payload: bytes | str) -> list[Take]:
+    """Parse take names, child counts, and observed override chunks.
+
+    Houdini stores ``.takes`` as a text header interleaved with big-endian
+    length-prefixed chunks. The observed chunks use ``s`` records as a shared
+    string table and ``d`` records for parameter override payloads.
+    """
+
+    data = payload if isinstance(payload, bytes) else payload.encode("utf-8")
+    offset = 0
+    header_end = data.find(b"\n")
+    if header_end != -1 and data.startswith(b"HoudiniTakeFile "):
+        offset = header_end + 1
 
     takes: list[Take] = []
-    for match in re.finditer(r"take name (?P<name>\S+) kids (?P<count>\d+)", text):
-        start = match.start()
-        end = text.find("take name ", match.end())
-        if end == -1:
-            end = len(text)
+    symbols: dict[int, str] = {}
+    while offset < len(data):
+        if not data.startswith(b"take name ", offset):
+            next_take = data.find(b"take name ", offset + 1)
+            if next_take == -1:
+                break
+            offset = next_take
+
+        take_start = offset
+        header, offset = _read_take_line(data, offset)
+        match = re.match(r"take name (?P<name>\S+) kids (?P<count>\d+)", header)
+        if not match:
+            break
+
+        chunks: list[str] = []
+        overrides: list[TakeOverride] = []
+        while offset < len(data) and not data.startswith(b"take name ", offset):
+            chunk, offset = _read_take_chunk(data, offset)
+            if chunk is None:
+                break
+            chunk_text = chunk.decode("utf-8", errors="replace")
+            chunks.append(chunk_text)
+            _parse_take_chunk(chunk_text, symbols, overrides)
+
+        raw = data[take_start:offset].decode("utf-8", errors="replace")
         takes.append(
             Take(
                 name=match.group("name"),
                 child_count=int(match.group("count")),
-                raw=text[start:end],
+                overrides=tuple(overrides),
+                raw_chunks=tuple(chunks),
+                raw=raw,
             )
         )
     return takes
@@ -447,6 +533,63 @@ def parse_order(text: str) -> list[str]:
     except ValueError:
         return lines
     return lines[1:]
+
+
+def _read_take_line(data: bytes, offset: int) -> tuple[str, int]:
+    """Read one ASCII line from a ``.takes`` payload."""
+
+    end = data.find(b"\n", offset)
+    if end == -1:
+        end = len(data)
+        next_offset = len(data)
+    else:
+        next_offset = end + 1
+    return data[offset:end].decode("utf-8", errors="replace"), next_offset
+
+
+def _read_take_chunk(data: bytes, offset: int) -> tuple[bytes | None, int]:
+    """Read one length-prefixed chunk from a ``.takes`` payload."""
+
+    if offset + 4 > len(data):
+        return None, len(data)
+    chunk_size = struct.unpack_from(">I", data, offset)[0]
+    chunk_start = offset + 4
+    chunk_end = chunk_start + chunk_size
+    if chunk_end > len(data):
+        return None, len(data)
+    return data[chunk_start:chunk_end], chunk_end
+
+
+def _parse_take_chunk(
+    chunk: str,
+    symbols: dict[int, str],
+    overrides: list[TakeOverride],
+) -> None:
+    """Parse the observed string-table and data chunks in a take."""
+
+    first_line, _, body = chunk.partition("\n")
+    parts = first_line.split(maxsplit=2)
+    if len(parts) >= 3 and parts[0] == "s" and parts[1].isdigit():
+        symbols[int(parts[1])] = parts[2]
+        return
+
+    parts = first_line.split()
+    if len(parts) < 3 or parts[0] != "d":
+        return
+    try:
+        path_index = int(parts[1])
+        parm_index = int(parts[2])
+    except ValueError:
+        return
+
+    overrides.append(
+        TakeOverride(
+            path=symbols.get(path_index, str(path_index)),
+            parm=symbols.get(parm_index, str(parm_index)),
+            parms=parse_parms(body),
+            raw=chunk,
+        )
+    )
 
 
 def _parse_parm_line(line: str) -> ParmValue | None:

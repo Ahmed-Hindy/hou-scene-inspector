@@ -125,14 +125,22 @@ def test_channels_and_takes_are_structured() -> None:
 
     animated_tx = animated.node("/obj/geo1/xform1").channels["tx"]
     expression_tx = expression.node("/obj/geo1/xform1").channels["tx"]
+    animated_links = animated.node("/obj/geo1/xform1").driven_parm_links()
 
     assert animated_tx.is_keyframed
     assert len(animated_tx.segments) == 2
     assert animated_tx.segments[0].length == 0.9583333333333334
     assert animated_tx.segments[0].values == (0.0, 10.0)
+    assert animated_links[0].parm_name == "t"
+    assert animated_links[0].component_index == 0
+    assert animated_links[0].channel is animated_tx
     assert expression_tx.is_expression
     assert expression_tx.segments[0].expression == "$F * 2"
     assert [take.name for take in takes.takes] == ["Main", "Alt"]
+    assert takes.takes[0].overrides[0].path == "/obj/geo1/xform1"
+    assert takes.takes[0].overrides[0].parm == "t"
+    assert takes.takes[0].overrides[0].parms["t"].value == [0, 0, 0]
+    assert takes.takes[1].overrides[0].parms["t"].value == [9, 0, 0]
 
 
 def test_contexts_subnets_binary_and_black_box_hda_placeholder() -> None:

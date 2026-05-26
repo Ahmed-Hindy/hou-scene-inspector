@@ -61,6 +61,30 @@ def test_node_and_tree_json_exports() -> None:
     assert tree_payload["obj"][0]["children"][0]["name"] == "subnet1"
 
 
+def test_channels_takes_and_record_diff_json_exports() -> None:
+    channels = run_cli("channels", "--json", str(FIXTURES / "animated_translate.hip"))
+    takes = run_cli("takes", "--json", str(FIXTURES / "two_takes_changed_parm.hip"))
+    diff = run_cli(
+        "diff-records",
+        "--json",
+        str(FIXTURES / "empty.hip"),
+        str(FIXTURES / "one_geo_node.hip"),
+    )
+
+    channel_payload = json.loads(channels.stdout)
+    take_payload = json.loads(takes.stdout)
+    diff_payload = json.loads(diff.stdout)
+    xform_channel = next(
+        row
+        for row in channel_payload
+        if row["node_path"] == "/obj/geo1/xform1" and row["channel_name"] == "tx"
+    )
+
+    assert xform_channel["driven_parms"][0]["parm_name"] == "t"
+    assert take_payload[1]["overrides"][0]["parms"]["t"]["value"] == [9, 0, 0]
+    assert "obj/geo1.init" in diff_payload["added"]
+
+
 def test_tree_json_matches_golden_snapshot() -> None:
     result = run_cli("tree", "--json", str(FIXTURES / "subnet_inside_geo.hip"))
 

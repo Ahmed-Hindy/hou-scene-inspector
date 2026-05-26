@@ -7,7 +7,8 @@ runtime.
 ## Supported
 
 - Houdini 21.0 `.hip` files saved as old portable CPIO archives.
-- Archive record listing, payload classification, and exact record dumping.
+- Archive record listing, payload classification, exact record dumping, and
+  record-level diffs by name/content hash.
 - Global scene metadata from `.start` and `.variables`.
 - Node hierarchy from record paths, including nested subnets.
 - Node metadata from `.def`: position, common flags, stat block, named outputs,
@@ -16,12 +17,15 @@ runtime.
   bracketed channel references.
 - Channel inspection from `.chn`: channel names, defaults, flags, segments,
   expressions, and segment value pairs.
+- Driven parameter links from `.parm` channel references to matching local
+  `.chn` records.
 - Spare parameter template inspection for names, labels, type names, defaults,
   folder labels, and menu item pairs.
 - Saved string userdata and preservation of unknown userdata type tags.
 - Binary payload preservation for records such as hard-locked SOP `.data`.
-- Take name and child-count listing from `.takes`.
-- JSON exports for records, summary, tree, and individual nodes.
+- Take name, child-count, and observed parameter override chunks from `.takes`.
+- JSON exports for records, summary, tree, individual nodes, channels, takes,
+  and record diffs.
 
 ## Known Unknowns
 

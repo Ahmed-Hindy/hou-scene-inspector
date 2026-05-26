@@ -45,6 +45,7 @@ def test_parm_parser_preserves_channel_references() -> None:
     assert value.value == 0
     assert value.default == 0
     assert geo.parms["ar_matte"].is_driven
+    assert geo.parms["ar_matte"].channel_references == (value,)
     assert not geo.parms["vm_matte"].is_driven
 
 

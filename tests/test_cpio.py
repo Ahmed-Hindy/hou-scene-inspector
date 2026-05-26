@@ -34,6 +34,14 @@ def test_classifies_binary_locked_geometry_record() -> None:
     assert entries["obj/geo1/box1.data"].size > 100
 
 
+def test_classifies_takes_as_structured_binary() -> None:
+    entries = {
+        entry.name: entry for entry in read_entries(FIXTURES / "two_takes_changed_parm.hip")
+    }
+
+    assert entries[".takes"].classification == "take-data"
+
+
 def test_rejects_non_cpio_file(tmp_path: Path) -> None:
     bogus = tmp_path / "not_a_hip.hip"
     bogus.write_bytes(b"not a hip")
