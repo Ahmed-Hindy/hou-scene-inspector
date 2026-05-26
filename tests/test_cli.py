@@ -125,6 +125,38 @@ def test_compare_oracle_json_exports_match_status(tmp_path: Path) -> None:
     assert payload["mismatch_count"] == 0
 
 
+def test_oracle_matrix_json_exports_coverage_status(tmp_path: Path) -> None:
+    oracle_path = tmp_path / "generated" / "empty.oracle.json"
+    oracle_path.parent.mkdir(parents=True)
+    oracle_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "source": "test",
+                "nodes": [],
+                "connections": [],
+                "takes": [{"name": "Main", "children": []}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_cli(
+        "oracle-matrix",
+        "--json",
+        "--fixture-root",
+        str(ROOT / "tests" / "fixtures" / "hip"),
+        "--oracle-dir",
+        str(tmp_path),
+        str(FIXTURES / "empty.hip"),
+    )
+    payload = json.loads(result.stdout)
+
+    assert payload["case_count"] == 1
+    assert payload["summary"]["matched"] == 1
+    assert payload["cases"][0]["hip_file"] == "generated/empty.hip"
+
+
 def test_channels_takes_and_record_diff_json_exports() -> None:
     channels = run_cli("channels", "--json", str(FIXTURES / "animated_translate.hip"))
     takes = run_cli("takes", "--json", str(FIXTURES / "two_takes_changed_parm.hip"))

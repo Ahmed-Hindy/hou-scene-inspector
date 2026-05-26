@@ -140,10 +140,15 @@ def _compare_takes(
     oracle: dict[str, Any],
     mismatches: list[dict[str, Any]],
 ) -> None:
-    """Compare take names."""
+    """Compare take names.
 
-    hip_takes = [take.name for take in hip.takes]
-    oracle_takes = [take["name"] for take in oracle.get("takes", [])]
+    Houdini's ``hou.takes.takes()`` ordering is not the same as the serialized
+    ``.takes`` order in observed files, so this oracle check treats take order
+    as non-semantic.
+    """
+
+    hip_takes = sorted(take.name for take in hip.takes)
+    oracle_takes = sorted(take["name"] for take in oracle.get("takes", []))
     if hip_takes != oracle_takes:
         _add_mismatch(mismatches, "takes", ".takes", hip_takes, oracle_takes)
 

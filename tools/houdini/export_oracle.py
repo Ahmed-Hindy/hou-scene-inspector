@@ -22,10 +22,15 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Export a Houdini oracle snapshot")
     parser.add_argument("hip_file", type=Path)
     parser.add_argument("--output", "-o", type=Path)
+    parser.add_argument(
+        "--source-root",
+        type=Path,
+        help="Write hip_file relative to this root for reproducible snapshots.",
+    )
     parser.add_argument("--pretty", action="store_true")
     args = parser.parse_args()
 
-    payload = export_oracle(args.hip_file)
+    payload = export_oracle(args.hip_file, source_root=args.source_root)
     text = json.dumps(payload, indent=2 if args.pretty else None, sort_keys=True)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -34,12 +39,12 @@ def main() -> None:
         print(text)
 
 
-def export_oracle(path: Path) -> dict[str, Any]:
+def export_oracle(path: Path, *, source_root: Path | None = None) -> dict[str, Any]:
     """Load ``path`` in Houdini and return a structural oracle snapshot."""
 
     hip_path = path.resolve()
     hou.hipFile.load(str(hip_path), suppress_save_prompt=True)
-    nodes = [_node_payload(node) for node in _iter_scene_nodes()]
+    nodes = [_node_payload(node, source_root=source_root) for node in _iter_scene_nodes()]
     connections = [
         connection
         for node in nodes
@@ -48,7 +53,7 @@ def export_oracle(path: Path) -> dict[str, Any]:
     return {
         "schema_version": 1,
         "source": "houdini-hython",
-        "hip_file": str(hip_path),
+        "hip_file": _display_path(hip_path, source_root),
         "houdini_version": hou.applicationVersionString(),
         "nodes": nodes,
         "connections": connections,
@@ -75,7 +80,11 @@ def _walk_children(node: hou.Node) -> list[hou.Node]:
     return nodes
 
 
-def _node_payload(node: hou.Node) -> dict[str, Any]:
+def _node_payload(
+    node: hou.Node,
+    *,
+    source_root: Path | None = None,
+) -> dict[str, Any]:
     """Return a structural snapshot for one Houdini node."""
 
     definition = node.type().definition()
@@ -89,7 +98,9 @@ def _node_payload(node: hou.Node) -> dict[str, Any]:
         "flags": _flag_payload(node),
         "type_definition": {
             "has_definition": definition is not None,
-            "library_file_path": definition.libraryFilePath() if definition else "",
+            "library_file_path": (
+                _library_path(definition, source_root) if definition else ""
+            ),
             "node_type_name": definition.nodeTypeName() if definition else "",
         },
         "parms": _parm_payloads(node),
@@ -248,6 +259,29 @@ def _take_payload(take: hou.Take) -> dict[str, Any]:
         "parent": parent.name() if parent is not None else "",
         "children": [child.name() for child in take.children()],
     }
+
+
+def _library_path(definition: hou.HDADefinition, source_root: Path | None) -> str:
+    """Return a stable HDA library path when one is available."""
+
+    library_path = definition.libraryFilePath()
+    if not library_path:
+        return ""
+    try:
+        return _display_path(Path(library_path).resolve(), source_root)
+    except OSError:
+        return library_path
+
+
+def _display_path(path: Path, source_root: Path | None) -> str:
+    """Return a stable path for the oracle JSON metadata."""
+
+    if source_root is None:
+        return str(path)
+    try:
+        return path.relative_to(source_root.resolve()).as_posix()
+    except ValueError:
+        return str(path)
 
 
 if __name__ == "__main__":

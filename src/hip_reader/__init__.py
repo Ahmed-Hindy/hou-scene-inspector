@@ -2,6 +2,13 @@
 
 from hip_reader.cpio import CpioEntry, CpioFormatError, read_entries
 from hip_reader.oracle import compare_oracle, load_oracle
+from hip_reader.oracle_matrix import (
+    OracleMatrixOptions,
+    discover_hip_files,
+    format_matrix_report,
+    oracle_path_for,
+    run_oracle_matrix,
+)
 from hip_reader.parsers import (
     Channel,
     ChannelReference,
@@ -44,12 +51,16 @@ __all__ = [
     "NodeInput",
     "NodeOutput",
     "NodeStat",
+    "OracleMatrixOptions",
     "ParmTemplate",
     "ParmValue",
     "Take",
     "TakeOverride",
     "compare_oracle",
+    "discover_hip_files",
+    "format_matrix_report",
     "load_oracle",
+    "oracle_path_for",
     "parse_channels",
     "parse_parms",
     "parse_order",
@@ -59,4 +70,5 @@ __all__ = [
     "parse_userdata",
     "parse_variables",
     "read_entries",
+    "run_oracle_matrix",
 ]

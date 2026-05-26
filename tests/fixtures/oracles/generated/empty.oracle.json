@@ -1,0 +1,15 @@
+{
+  "connections": [],
+  "hip_file": "generated/empty.hip",
+  "houdini_version": "21.0.631",
+  "nodes": [],
+  "schema_version": 1,
+  "source": "houdini-hython",
+  "takes": [
+    {
+      "children": [],
+      "name": "Main",
+      "parent": ""
+    }
+  ]
+}

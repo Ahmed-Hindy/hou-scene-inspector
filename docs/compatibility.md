@@ -33,6 +33,8 @@ runtime.
   `tools/houdini/export_oracle.py`: node paths/types/children/positions,
   connections, take names, expression channels, keyframe counts/values, and
   comparable static parameter raw values.
+- Corpus-level oracle matrix reporting with committed Houdini-derived JSON
+  snapshots in `tests/fixtures/oracles/`; see `docs/oracle-coverage.md`.
 
 ## Known Unknowns
 
@@ -44,6 +46,8 @@ runtime.
 - Oracle comparison deliberately skips fields where Houdini reports UI/menu
   tokens while `.hip` stores implementation values, unless both sides are in
   the same obvious raw-value domain.
+- Oracle comparison treats take ordering as non-semantic because the serialized
+  `.takes` order and `hou.takes.takes()` order differ in observed fixtures.
 - HDA fixtures are currently black-box metadata placeholders; real HDA
   definition parsing is not implemented.
 - Binary geometry payloads are classified and preserved, not decoded.

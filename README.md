@@ -70,3 +70,13 @@ $oracle = "$env:TEMP\animation_curve_variants_oracle.json"
 & "C:\Program Files\Side Effects Software\Houdini 21.0.631\bin\hython.exe" tools/houdini/export_oracle.py tests/fixtures/hip/source_truth/animation_curve_variants.hip --output $oracle --pretty
 uv run hip-inspect compare-oracle tests/fixtures/hip/source_truth/animation_curve_variants.hip $oracle
 ```
+
+To refresh and compare the whole fixture matrix:
+
+```powershell
+uv run hip-inspect oracle-matrix --refresh --hython "C:\Program Files\Side Effects Software\Houdini 21.0.631\bin\hython.exe" --write-report docs/oracle-coverage.md
+```
+
+Committed oracle snapshots live under `tests/fixtures/oracles/`, so normal
+`uv run pytest` can validate the parser against Houdini-derived structural
+truth without requiring Houdini at test runtime.

@@ -11,6 +11,12 @@ from pathlib import Path
 from hip_reader.cpio import CpioEntry, read_entries
 from hip_reader.jsonutil import json_safe
 from hip_reader.oracle import compare_oracle, load_oracle
+from hip_reader.oracle_matrix import (
+    OracleMatrixOptions,
+    discover_hip_files,
+    format_matrix_report,
+    run_oracle_matrix,
+)
 from hip_reader.scene import HipFile, Node
 
 
@@ -73,6 +79,57 @@ def main() -> None:
     oracle_parser.add_argument("hip_file", type=Path)
     oracle_parser.add_argument("oracle_json", type=Path)
 
+    oracle_matrix_parser = subparsers.add_parser(
+        "oracle-matrix",
+        help="Compare a fixture corpus against Houdini oracle JSON snapshots",
+    )
+    oracle_matrix_parser.add_argument("--json", action="store_true", help="Output JSON")
+    oracle_matrix_parser.add_argument(
+        "--fixture-root",
+        type=Path,
+        default=Path("tests/fixtures/hip"),
+        help="Root used to discover .hip files and map oracle paths",
+    )
+    oracle_matrix_parser.add_argument(
+        "--oracle-dir",
+        type=Path,
+        default=Path("tests/fixtures/oracles"),
+        help="Directory containing matching .oracle.json files",
+    )
+    oracle_matrix_parser.add_argument(
+        "--exporter",
+        type=Path,
+        default=Path("tools/houdini/export_oracle.py"),
+        help="Hython oracle exporter script",
+    )
+    oracle_matrix_parser.add_argument(
+        "--hython",
+        type=Path,
+        default=Path("hython"),
+        help="Path to Houdini hython executable",
+    )
+    oracle_matrix_parser.add_argument(
+        "--export-missing",
+        action="store_true",
+        help="Use hython to create missing oracle JSON files",
+    )
+    oracle_matrix_parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Use hython to regenerate every oracle JSON file first",
+    )
+    oracle_matrix_parser.add_argument(
+        "--write-report",
+        type=Path,
+        help="Write a Markdown coverage report to this path",
+    )
+    oracle_matrix_parser.add_argument(
+        "--fail-on-issues",
+        action="store_true",
+        help="Exit non-zero when any case is missing, failed, or mismatched",
+    )
+    oracle_matrix_parser.add_argument("hip_files", nargs="*", type=Path)
+
     args = parser.parse_args()
     if args.command == "records":
         _print_records(args.hip_file, as_json=args.json)
@@ -98,6 +155,8 @@ def main() -> None:
         _diff_records(args.left, args.right, as_json=args.json)
     elif args.command == "compare-oracle":
         _compare_oracle(args.hip_file, args.oracle_json, as_json=args.json)
+    elif args.command == "oracle-matrix":
+        _oracle_matrix(args)
     else:
         hip_file = getattr(args, "hip_file", None)
         if hip_file is None:
@@ -415,6 +474,36 @@ def _compare_oracle(hip_file: Path, oracle_json: Path, *, as_json: bool = False)
         print(f"{mismatch['kind']} {mismatch['path']}")
         print(f"  hip_reader: {mismatch['hip_reader']!r}")
         print(f"  oracle:     {mismatch['oracle']!r}")
+
+
+def _oracle_matrix(args: argparse.Namespace) -> None:
+    """Print a fixture-to-oracle comparison matrix."""
+
+    hip_files = args.hip_files or discover_hip_files(args.fixture_root)
+    payload = run_oracle_matrix(
+        hip_files,
+        OracleMatrixOptions(
+            fixture_root=args.fixture_root,
+            oracle_dir=args.oracle_dir,
+            exporter=args.exporter,
+            hython=args.hython,
+            export_missing=args.export_missing,
+            refresh=args.refresh,
+        ),
+    )
+    report = format_matrix_report(payload)
+    if args.write_report:
+        args.write_report.parent.mkdir(parents=True, exist_ok=True)
+        args.write_report.write_text(report, encoding="utf-8")
+    if args.json:
+        _print_json(payload)
+    else:
+        print(report, end="")
+    issue_count = sum(
+        count for status, count in payload["summary"].items() if status != "matched"
+    )
+    if args.fail_on_issues and issue_count:
+        raise SystemExit(1)
 
 
 def _record_diff(left: Path, right: Path) -> dict[str, object]:
