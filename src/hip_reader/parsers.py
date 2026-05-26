@@ -80,6 +80,8 @@ class ChannelSegment:
 
     length: float | None = None
     values: tuple[float, ...] = ()
+    slopes: tuple[float, ...] = ()
+    accelerations: tuple[float, ...] = ()
     expression: str = ""
     options: tuple[str, ...] = ()
     raw: str = ""
@@ -971,6 +973,16 @@ def _parse_channel_segments(block: str) -> list[ChannelSegment]:
                     for token in _find_value_tokens(raw)
                     if _is_float(token)
                 ),
+                slopes=tuple(
+                    _coerce_float(token)
+                    for token in _find_numeric_sequence(raw, "slope")
+                    if _is_float(token)
+                ),
+                accelerations=tuple(
+                    _coerce_float(token)
+                    for token in _find_numeric_sequence(raw, "accel")
+                    if _is_float(token)
+                ),
                 expression=_find_expression(raw),
                 options=tuple(_find_segment_options(raw)),
                 raw=raw,
@@ -1005,10 +1017,24 @@ def _find_expression(text: str) -> str:
 def _find_value_tokens(text: str) -> list[str]:
     """Find tokens from a segment ``value =`` assignment."""
 
-    match = re.search(r"\bvalue\s*=\s*([^e}\n]+)", text)
+    return _find_numeric_sequence(text, "value")
+
+
+def _find_numeric_sequence(text: str, name: str) -> list[str]:
+    """Find numeric tokens after ``name =`` until the next known field."""
+
+    match = re.search(rf"\b{re.escape(name)}\s*=", text)
     if not match:
         return []
-    return _split_houdini_tokens(match.group(1))
+    start = match.end()
+    end = len(text)
+    for field_name in ("value", "slope", "accel", "expr", "options", "length"):
+        if field_name == name:
+            continue
+        next_match = re.search(rf"\b{re.escape(field_name)}\s*=", text[start:])
+        if next_match:
+            end = min(end, start + next_match.start())
+    return _split_houdini_tokens(text[start:end].strip().rstrip("}"))
 
 
 def _find_segment_options(text: str) -> list[str]:

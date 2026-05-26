@@ -27,16 +27,23 @@ print(box.parm("size"))
 ```
 
 ```powershell
-uv run hip-inspect records tests/fixtures/hip/one_geo_with_box.hip
-uv run hip-inspect records --json tests/fixtures/hip/one_geo_with_box.hip
-uv run hip-inspect summary --json tests/fixtures/hip/merge_two_boxes.hip
-uv run hip-inspect tree tests/fixtures/hip/subnet_inside_geo.hip
-uv run hip-inspect node --json tests/fixtures/hip/animated_translate.hip /obj/geo1/xform1
-uv run hip-inspect channels tests/fixtures/hip/animated_translate.hip
-uv run hip-inspect takes tests/fixtures/hip/two_takes_changed_parm.hip
-uv run hip-inspect diff-records tests/fixtures/hip/empty.hip tests/fixtures/hip/one_geo_node.hip
-uv run hip-inspect dump-record tests/fixtures/hip/box_wired_xform.hip obj/geo1/transform1.def
+uv run hip-inspect records tests/fixtures/hip/generated/one_geo_with_box.hip
+uv run hip-inspect records --json tests/fixtures/hip/generated/one_geo_with_box.hip
+uv run hip-inspect summary --json tests/fixtures/hip/generated/merge_two_boxes.hip
+uv run hip-inspect tree tests/fixtures/hip/generated/subnet_inside_geo.hip
+uv run hip-inspect node --json tests/fixtures/hip/generated/animated_translate.hip /obj/geo1/xform1
+uv run hip-inspect channels tests/fixtures/hip/source_truth/animation_curve_variants.hip
+uv run hip-inspect takes tests/fixtures/hip/generated/two_takes_changed_parm.hip
+uv run hip-inspect diff-records tests/fixtures/hip/generated/empty.hip tests/fixtures/hip/generated/one_geo_node.hip
+uv run hip-inspect dump-record tests/fixtures/hip/generated/box_wired_xform.hip obj/geo1/transform1.def
 ```
+
+Fixture corpora are split by authority:
+
+- `tests/fixtures/hip/generated/` contains reproducible fixtures from
+  `tools/houdini/generate_fixtures.py`.
+- `tests/fixtures/hip/source_truth/` contains human-authored Houdini files used
+  as source-of-truth oracle cases.
 
 See [docs/compatibility.md](docs/compatibility.md) for the current supported
 surface and known unknowns.

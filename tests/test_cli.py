@@ -4,7 +4,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURES = ROOT / "tests" / "fixtures" / "hip"
+FIXTURES = ROOT / "tests" / "fixtures" / "hip" / "generated"
+SOURCE_TRUTH = ROOT / "tests" / "fixtures" / "hip" / "source_truth"
 GOLDEN = ROOT / "tests" / "fixtures" / "golden"
 
 
@@ -83,6 +84,32 @@ def test_channels_takes_and_record_diff_json_exports() -> None:
     assert xform_channel["driven_parms"][0]["parm_name"] == "t"
     assert take_payload[1]["overrides"][0]["parms"]["t"]["value"] == [9, 0, 0]
     assert "obj/geo1.init" in diff_payload["added"]
+
+
+def test_source_truth_animation_curve_fixture_exports_channels() -> None:
+    result = run_cli(
+        "channels",
+        "--json",
+        str(SOURCE_TRUTH / "animation_curve_variants.hip"),
+    )
+    payload = json.loads(result.stdout)
+    tx = next(
+        row
+        for row in payload
+        if row["node_path"] == "/obj/geo1/transform1"
+        and row["channel_name"] == "tx"
+    )
+    ty = next(
+        row
+        for row in payload
+        if row["node_path"] == "/obj/geo1/transform1"
+        and row["channel_name"] == "ty"
+    )
+
+    assert tx["segments"] == 3
+    assert tx["is_keyframed"]
+    assert ty["is_expression"]
+    assert ty["channel"]["segments"][0]["expression"] == "$F * 0.1"
 
 
 def test_tree_json_matches_golden_snapshot() -> None:

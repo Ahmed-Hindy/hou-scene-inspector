@@ -3,7 +3,7 @@ from pathlib import Path
 from hip_reader import HipFile
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURES = ROOT / "tests" / "fixtures" / "hip"
+FIXTURES = ROOT / "tests" / "fixtures" / "hip" / "generated"
 
 
 def test_empty_scene_has_metadata_but_no_operator_nodes() -> None:

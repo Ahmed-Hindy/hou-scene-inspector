@@ -12,7 +12,8 @@ from hip_reader import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURES = ROOT / "tests" / "fixtures" / "hip"
+FIXTURES = ROOT / "tests" / "fixtures" / "hip" / "generated"
+SOURCE_TRUTH = ROOT / "tests" / "fixtures" / "hip" / "source_truth"
 
 
 def _record_text(hip_name: str, record_name: str) -> str:
@@ -99,3 +100,22 @@ def test_userdata_fixture_exposes_saved_string_values() -> None:
     assert geo.userdata["string_value"] == "hello"
     assert geo.userdata["int_value"] == "42"
     assert geo.userdata["float_value"] == "3.5"
+
+
+def test_source_truth_animation_curve_segments_keep_bezier_shape_fields() -> None:
+    hip = HipFile.load(SOURCE_TRUTH / "animation_curve_variants.hip")
+    transform = hip.node("/obj/geo1/transform1")
+
+    assert transform is not None
+    tx = transform.channels["tx"]
+    ty = transform.channels["ty"]
+
+    assert len(tx.segments) == 3
+    assert tx.segments[0].values == (0.0, 1.0)
+    assert tx.segments[0].slopes == (0.0, 1.5333024976873266)
+    assert tx.segments[0].accelerations == (
+        0.3194444444444444,
+        0.584768036381502,
+    )
+    assert tx.segments[1].length == 0.9999999999999999
+    assert ty.segments[0].expression == "$F * 0.1"

@@ -11,7 +11,7 @@ from pathlib import Path
 import hou
 
 ROOT = Path(__file__).resolve().parents[2]
-FIXTURE_DIR = ROOT / "tests" / "fixtures" / "hip"
+FIXTURE_DIR = ROOT / "tests" / "fixtures" / "hip" / "generated"
 
 
 def main() -> None:

@@ -3,7 +3,7 @@ from pathlib import Path
 from hip_reader import CpioFormatError, read_entries
 
 ROOT = Path(__file__).resolve().parents[1]
-FIXTURES = ROOT / "tests" / "fixtures" / "hip"
+FIXTURES = ROOT / "tests" / "fixtures" / "hip" / "generated"
 
 
 def test_reads_old_portable_cpio_records_without_padding() -> None:

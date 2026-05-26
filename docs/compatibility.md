@@ -16,7 +16,7 @@ runtime.
 - Parameter values from `.parm`, including strings with parentheses and
   bracketed channel references.
 - Channel inspection from `.chn`: channel names, defaults, flags, segments,
-  expressions, and segment value pairs.
+  expressions, segment value pairs, slopes, and acceleration fields.
 - Driven parameter links from `.parm` channel references to matching local
   `.chn` records.
 - Spare parameter template inspection for names, labels, type names, defaults,
@@ -40,6 +40,12 @@ runtime.
 
 ## Fixture Rule
 
-Fixtures may be generated with `hython` using `tools/houdini/generate_fixtures.py`.
+Fixtures are split by authority:
+
+- `tests/fixtures/hip/generated/` contains reproducible files generated with
+  `hython` using `tools/houdini/generate_fixtures.py`.
+- `tests/fixtures/hip/source_truth/` contains human-authored Houdini files used
+  as source-of-truth oracle cases.
+
 Runtime package code and runtime tests must remain pure Python and must not
 import `hou`.

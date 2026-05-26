@@ -1,0 +1,17 @@
+{
+  "houdini_version": "21.0.631",
+  "corpus": "source_truth",
+  "authority": "Human-authored Houdini files supplied by Ahmed Hindy.",
+  "runtime_rule": "Source-truth fixtures may be created in Houdini; hip_reader runtime must remain Houdini-free.",
+  "fixtures": {
+    "animation_curve_variants.hip": {
+      "purpose": "Animation channel source of truth for richer curve segments.",
+      "contents": "/obj/geo1/transform1 with tx keyed at frames 1, 24, and 48 using bezier interpolation; ty is expression-driven with $F * 0.1.",
+      "expected": [
+        "tx has three bezier channel segments",
+        "tx segments preserve value, slope, and acceleration fields",
+        "ty is an expression-only channel"
+      ]
+    }
+  }
+}
