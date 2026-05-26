@@ -98,6 +98,33 @@ def test_binary_records_json_exports_metadata_only() -> None:
     assert "content" not in record
 
 
+def test_compare_oracle_json_exports_match_status(tmp_path: Path) -> None:
+    oracle_path = tmp_path / "empty_oracle.json"
+    oracle_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "source": "test",
+                "nodes": [],
+                "connections": [],
+                "takes": [{"name": "Main", "children": []}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_cli(
+        "compare-oracle",
+        "--json",
+        str(FIXTURES / "empty.hip"),
+        str(oracle_path),
+    )
+    payload = json.loads(result.stdout)
+
+    assert payload["ok"]
+    assert payload["mismatch_count"] == 0
+
+
 def test_channels_takes_and_record_diff_json_exports() -> None:
     channels = run_cli("channels", "--json", str(FIXTURES / "animated_translate.hip"))
     takes = run_cli("takes", "--json", str(FIXTURES / "two_takes_changed_parm.hip"))

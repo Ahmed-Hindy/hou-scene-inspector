@@ -10,6 +10,7 @@ from pathlib import Path
 
 from hip_reader.cpio import CpioEntry, read_entries
 from hip_reader.jsonutil import json_safe
+from hip_reader.oracle import compare_oracle, load_oracle
 from hip_reader.scene import HipFile, Node
 
 
@@ -64,6 +65,14 @@ def main() -> None:
     diff_parser.add_argument("left", type=Path)
     diff_parser.add_argument("right", type=Path)
 
+    oracle_parser = subparsers.add_parser(
+        "compare-oracle",
+        help="Compare against a Houdini oracle JSON snapshot",
+    )
+    oracle_parser.add_argument("--json", action="store_true", help="Output JSON")
+    oracle_parser.add_argument("hip_file", type=Path)
+    oracle_parser.add_argument("oracle_json", type=Path)
+
     args = parser.parse_args()
     if args.command == "records":
         _print_records(args.hip_file, as_json=args.json)
@@ -87,6 +96,8 @@ def main() -> None:
         _dump_record(args.hip_file, args.record_name, as_json=args.json)
     elif args.command == "diff-records":
         _diff_records(args.left, args.right, as_json=args.json)
+    elif args.command == "compare-oracle":
+        _compare_oracle(args.hip_file, args.oracle_json, as_json=args.json)
     else:
         hip_file = getattr(args, "hip_file", None)
         if hip_file is None:
@@ -387,6 +398,23 @@ def _diff_records(left: Path, right: Path, *, as_json: bool = False) -> None:
             f"{item['left_size']} -> {item['right_size']} bytes"
         )
     print(f"unchanged {payload['unchanged_count']}")
+
+
+def _compare_oracle(hip_file: Path, oracle_json: Path, *, as_json: bool = False) -> None:
+    """Compare hip-reader output with a Houdini oracle snapshot."""
+
+    payload = compare_oracle(HipFile.load(hip_file), load_oracle(oracle_json))
+    if as_json:
+        _print_json(payload)
+        return
+    status = "OK" if payload["ok"] else "MISMATCH"
+    print(f"{status}: {payload['mismatch_count']} mismatch(es)")
+    for key, value in payload["summary"].items():
+        print(f"{key}: {value}")
+    for mismatch in payload["mismatches"]:
+        print(f"{mismatch['kind']} {mismatch['path']}")
+        print(f"  hip_reader: {mismatch['hip_reader']!r}")
+        print(f"  oracle:     {mismatch['oracle']!r}")
 
 
 def _record_diff(left: Path, right: Path) -> dict[str, object]:

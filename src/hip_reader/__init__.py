@@ -1,6 +1,7 @@
 """Houdini-free inspection helpers for .hip scene files."""
 
 from hip_reader.cpio import CpioEntry, CpioFormatError, read_entries
+from hip_reader.oracle import compare_oracle, load_oracle
 from hip_reader.parsers import (
     Channel,
     ChannelReference,
@@ -47,6 +48,8 @@ __all__ = [
     "ParmValue",
     "Take",
     "TakeOverride",
+    "compare_oracle",
+    "load_oracle",
     "parse_channels",
     "parse_parms",
     "parse_order",

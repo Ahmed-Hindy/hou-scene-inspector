@@ -29,6 +29,10 @@ runtime.
 - Take name, child-count, and observed parameter override chunks from `.takes`.
 - JSON exports for records, summary, tree, individual nodes, channels, takes,
   and record diffs.
+- Houdini oracle comparison for structural fields exported by
+  `tools/houdini/export_oracle.py`: node paths/types/children/positions,
+  connections, take names, expression channels, keyframe counts/values, and
+  comparable static parameter raw values.
 
 ## Known Unknowns
 
@@ -37,6 +41,9 @@ runtime.
 - Userdata type tags beyond observed type `3` are preserved but not decoded.
 - Channel timing is inspectable as saved segment lengths and values, not
   converted into fully evaluated keyframe curves.
+- Oracle comparison deliberately skips fields where Houdini reports UI/menu
+  tokens while `.hip` stores implementation values, unless both sides are in
+  the same obvious raw-value domain.
 - HDA fixtures are currently black-box metadata placeholders; real HDA
   definition parsing is not implemented.
 - Binary geometry payloads are classified and preserved, not decoded.

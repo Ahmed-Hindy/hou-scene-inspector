@@ -62,3 +62,11 @@ To regenerate the controlled fixture corpus with Houdini 21.0:
 ```powershell
 & "C:\Program Files\Side Effects Software\Houdini 21.0.631\bin\hython.exe" tools/houdini/generate_fixtures.py
 ```
+
+To compare `hip-reader` output against a Houdini API oracle:
+
+```powershell
+$oracle = "$env:TEMP\animation_curve_variants_oracle.json"
+& "C:\Program Files\Side Effects Software\Houdini 21.0.631\bin\hython.exe" tools/houdini/export_oracle.py tests/fixtures/hip/source_truth/animation_curve_variants.hip --output $oracle --pretty
+uv run hip-inspect compare-oracle tests/fixtures/hip/source_truth/animation_curve_variants.hip $oracle
+```
