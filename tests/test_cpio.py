@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from hip_reader import CpioFormatError, read_entries
+from hou_scene_inspector import CpioFormatError, read_entries
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "hip" / "generated"

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from hip_reader import (
+from hou_scene_inspector import (
     HipFile,
     OracleMatrixOptions,
     compare_oracle,
@@ -51,6 +51,8 @@ def test_compare_oracle_reports_mismatched_node_type() -> None:
     assert not result["ok"]
     assert result["mismatches"][0]["kind"] == "node_type"
     assert result["mismatches"][0]["path"] == "/obj/geo1/box1"
+    assert "hou_scene_inspector" in result["mismatches"][0]
+    assert "hip_reader" not in result["mismatches"][0]
 
 
 def test_compare_oracle_treats_take_order_as_non_semantic() -> None:

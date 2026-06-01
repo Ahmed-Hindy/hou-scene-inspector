@@ -1,6 +1,6 @@
-# Houdini Oracle Coverage
+# Oracle Coverage
 
-This report compares `hip-reader` output with Houdini API oracle JSON.
+This report compares `hou-scene-inspector` output with Oracle JSON.
 
 ## Summary
 

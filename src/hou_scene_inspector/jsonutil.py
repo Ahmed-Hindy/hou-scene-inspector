@@ -1,4 +1,4 @@
-"""JSON-friendly serializers for hip_reader objects."""
+"""JSON-friendly serializers for hou_scene_inspector objects."""
 
 from __future__ import annotations
 

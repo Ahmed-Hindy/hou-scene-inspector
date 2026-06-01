@@ -1,6 +1,6 @@
 # Compatibility Notes
 
-`hip-reader` is a Houdini-free inspector for saved `.hip` scene structure. It
+`hou-scene-inspector` provides `.hip scene-structure inspection`. It
 does not cook nodes, evaluate geometry, render, execute HDAs, or import `hou` at
 runtime.
 
@@ -29,11 +29,11 @@ runtime.
 - Take name, child-count, and observed parameter override chunks from `.takes`.
 - JSON exports for records, summary, tree, individual nodes, channels, takes,
   and record diffs.
-- Houdini oracle comparison for structural fields exported by
+- Oracle comparison for structural fields exported by
   `tools/houdini/export_oracle.py`: node paths/types/children/positions,
   connections, take names, expression channels, keyframe counts/values, and
   comparable static parameter raw values.
-- Corpus-level oracle matrix reporting with committed Houdini-derived JSON
+- Corpus-level Oracle matrix reporting with committed JSON
   snapshots in `tests/fixtures/oracles/`; see `docs/oracle-coverage.md`.
 
 ## Known Unknowns
@@ -59,7 +59,7 @@ Fixtures are split by authority:
 - `tests/fixtures/hip/generated/` contains reproducible files generated with
   `hython` using `tools/houdini/generate_fixtures.py`.
 - `tests/fixtures/hip/source_truth/` contains human-authored Houdini files used
-  as source-of-truth oracle cases.
+  as contributor-authored inspection cases for Oracle comparison.
 
 Runtime package code and runtime tests must remain pure Python and must not
 import `hou`.

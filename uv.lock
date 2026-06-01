@@ -12,7 +12,7 @@ wheels = [
 ]
 
 [[package]]
-name = "hip-reader"
+name = "hou-scene-inspector"
 version = "0.1.0"
 source = { editable = "." }
 

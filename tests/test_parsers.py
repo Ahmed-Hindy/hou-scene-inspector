@@ -2,7 +2,7 @@ from pathlib import Path
 
 import struct
 
-from hip_reader import (
+from hou_scene_inspector import (
     ChannelReference,
     HipFile,
     parse_parms,

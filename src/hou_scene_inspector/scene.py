@@ -9,9 +9,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from hip_reader.cpio import CpioEntry, classify_payload, read_entries
-from hip_reader.jsonutil import json_safe
-from hip_reader.parsers import (
+from hou_scene_inspector.cpio import CpioEntry, classify_payload, read_entries
+from hou_scene_inspector.jsonutil import json_safe
+from hou_scene_inspector.parsers import (
     Channel,
     ChannelReference,
     NodeDef,

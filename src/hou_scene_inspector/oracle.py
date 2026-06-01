@@ -1,4 +1,4 @@
-"""Compare ``hip_reader`` output with a Houdini-exported oracle snapshot."""
+"""Compare ``hou_scene_inspector`` output with an Oracle snapshot."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import math
 from pathlib import Path
 from typing import Any
 
-from hip_reader.scene import HipFile
+from hou_scene_inspector.scene import HipFile
 
 
 def load_oracle(path: str | Path) -> dict[str, Any]:
@@ -22,7 +22,7 @@ def compare_oracle(
     *,
     position_tolerance: float = 1e-4,
 ) -> dict[str, Any]:
-    """Compare a loaded ``HipFile`` against a Houdini oracle snapshot.
+    """Compare a loaded ``HipFile`` against an Oracle snapshot.
 
     The comparison is intentionally structural. It does not evaluate geometry,
     expressions, or animation curves.
@@ -283,7 +283,7 @@ def _add_mismatch(
         {
             "kind": kind,
             "path": path,
-            "hip_reader": hip_value,
+            "hou_scene_inspector": hip_value,
             "oracle": oracle_value,
         }
     )

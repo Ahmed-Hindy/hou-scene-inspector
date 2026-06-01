@@ -11,7 +11,7 @@ GOLDEN = ROOT / "tests" / "fixtures" / "golden"
 
 def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [sys.executable, "-m", "hip_reader.cli", *args],
+        [sys.executable, "-m", "hou_scene_inspector.cli", *args],
         check=True,
         cwd=ROOT,
         text=True,

@@ -17,7 +17,7 @@
         "template": false
       },
       "name": "simple_hda1",
-      "node_type": "hip_reader_simple_hda::1.0",
+      "node_type": "hou_scene_inspector_simple_hda::1.0",
       "parent_path": "/obj",
       "parms": {
         "bank": {
@@ -353,7 +353,7 @@
       "type_definition": {
         "has_definition": true,
         "library_file_path": "generated/simple_hda_definition.hda",
-        "node_type_name": "hip_reader_simple_hda::1.0"
+        "node_type_name": "hou_scene_inspector_simple_hda::1.0"
       },
       "userdata": {
         "___Version___": "",

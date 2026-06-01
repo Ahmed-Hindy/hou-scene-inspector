@@ -1,7 +1,7 @@
-"""Generate controlled Houdini .hip fixtures for hip-reader.
+"""Generate controlled Houdini .hip inspection fixtures for hou-scene-inspector.
 
 Run with Houdini's ``hython``. This script is intentionally outside the runtime
-package: fixtures may use Houdini as an oracle, but ``hip_reader`` must not.
+package: fixtures may use Houdini as an Oracle, but ``hou_scene_inspector`` must not.
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ FIXTURE_DIR = ROOT / "tests" / "fixtures" / "hip" / "generated"
 
 
 def main() -> None:
-    """Generate all controlled reverse-engineering fixtures."""
+    """Generate all controlled inspection fixtures."""
 
     FIXTURE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -285,9 +285,9 @@ def make_simple_hda_instance() -> None:
     if hda_path.exists():
         hda_path.unlink()
     hda = subnet.createDigitalAsset(
-        name="hip_reader_simple_hda::1.0",
+        name="hou_scene_inspector_simple_hda::1.0",
         hda_file_name=str(hda_path),
-        description="hip-reader simple HDA",
+        description="hou-scene-inspector simple HDA",
     )
     hda.setUserData("hda_fixture_note", "real hda instance")
     save("simple_hda_instance.hip")

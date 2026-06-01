@@ -1,7 +1,7 @@
 import hashlib
 from pathlib import Path
 
-from hip_reader import HipFile
+from hou_scene_inspector import HipFile
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "fixtures" / "hip" / "generated"
@@ -164,6 +164,6 @@ def test_contexts_subnets_binary_and_black_box_hda_placeholder() -> None:
     ).hexdigest()
     assert binary_info.preview_hex.startswith("7f 4e 53 4a")
     assert locked.binary_record_summary() == [binary_info]
-    assert hda.node("/obj/simple_hda1").node_type == "hip_reader_simple_hda::1.0"
+    assert hda.node("/obj/simple_hda1").node_type == "hou_scene_inspector_simple_hda::1.0"
     assert hda.node("/obj/simple_hda1").userdata["hda_fixture_note"] == "real hda instance"
     assert hda.node("/obj/simple_hda1/inner_geo").node_type == "geo"

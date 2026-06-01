@@ -8,20 +8,20 @@ import hashlib
 import json
 from pathlib import Path
 
-from hip_reader.cpio import CpioEntry, read_entries
-from hip_reader.jsonutil import json_safe
-from hip_reader.oracle import compare_oracle, load_oracle
-from hip_reader.oracle_matrix import (
+from hou_scene_inspector.cpio import CpioEntry, read_entries
+from hou_scene_inspector.jsonutil import json_safe
+from hou_scene_inspector.oracle import compare_oracle, load_oracle
+from hou_scene_inspector.oracle_matrix import (
     OracleMatrixOptions,
     discover_hip_files,
     format_matrix_report,
     run_oracle_matrix,
 )
-from hip_reader.scene import HipFile, Node
+from hou_scene_inspector.scene import HipFile, Node
 
 
 def main() -> None:
-    """Run the ``hip-inspect`` command."""
+    """Run the ``hou-scene-inspector`` command."""
 
     parser = argparse.ArgumentParser(description="Inspect Houdini .hip files")
     subparsers = parser.add_subparsers(dest="command")
@@ -73,7 +73,7 @@ def main() -> None:
 
     oracle_parser = subparsers.add_parser(
         "compare-oracle",
-        help="Compare against a Houdini oracle JSON snapshot",
+        help="Compare against an Oracle JSON snapshot",
     )
     oracle_parser.add_argument("--json", action="store_true", help="Output JSON")
     oracle_parser.add_argument("hip_file", type=Path)
@@ -81,7 +81,7 @@ def main() -> None:
 
     oracle_matrix_parser = subparsers.add_parser(
         "oracle-matrix",
-        help="Compare a fixture corpus against Houdini oracle JSON snapshots",
+        help="Compare a fixture corpus against Oracle JSON snapshots",
     )
     oracle_matrix_parser.add_argument("--json", action="store_true", help="Output JSON")
     oracle_matrix_parser.add_argument(
@@ -460,7 +460,7 @@ def _diff_records(left: Path, right: Path, *, as_json: bool = False) -> None:
 
 
 def _compare_oracle(hip_file: Path, oracle_json: Path, *, as_json: bool = False) -> None:
-    """Compare hip-reader output with a Houdini oracle snapshot."""
+    """Compare hou-scene-inspector output with an Oracle snapshot."""
 
     payload = compare_oracle(HipFile.load(hip_file), load_oracle(oracle_json))
     if as_json:
@@ -472,7 +472,7 @@ def _compare_oracle(hip_file: Path, oracle_json: Path, *, as_json: bool = False)
         print(f"{key}: {value}")
     for mismatch in payload["mismatches"]:
         print(f"{mismatch['kind']} {mismatch['path']}")
-        print(f"  hip_reader: {mismatch['hip_reader']!r}")
+        print(f"  hou_scene_inspector: {mismatch['hou_scene_inspector']!r}")
         print(f"  oracle:     {mismatch['oracle']!r}")
 
 

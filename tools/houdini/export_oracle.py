@@ -1,4 +1,4 @@
-"""Export a conservative Houdini oracle snapshot for a .hip file.
+"""Export a conservative Oracle snapshot for a .hip file.
 
 Run this script with Houdini's ``hython``. It may import ``hou`` and inspect the
 scene through Houdini APIs, but it must not be imported by the runtime package.
@@ -17,9 +17,9 @@ import hou
 
 
 def main() -> None:
-    """Export a Houdini-derived oracle JSON document."""
+    """Export an Oracle JSON document."""
 
-    parser = argparse.ArgumentParser(description="Export a Houdini oracle snapshot")
+    parser = argparse.ArgumentParser(description="Export an Oracle snapshot")
     parser.add_argument("hip_file", type=Path)
     parser.add_argument("--output", "-o", type=Path)
     parser.add_argument(

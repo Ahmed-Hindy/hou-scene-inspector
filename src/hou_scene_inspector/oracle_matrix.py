@@ -1,4 +1,4 @@
-"""Batch comparison helpers for Houdini oracle snapshots."""
+"""Batch comparison helpers for Oracle snapshots."""
 
 from __future__ import annotations
 
@@ -8,8 +8,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from hip_reader.oracle import compare_oracle, load_oracle
-from hip_reader.scene import HipFile
+from hou_scene_inspector.oracle import compare_oracle, load_oracle
+from hou_scene_inspector.scene import HipFile
 
 
 @dataclass(frozen=True)
@@ -61,9 +61,9 @@ def format_matrix_report(payload: dict[str, Any]) -> str:
 
     summary = payload["summary"]
     lines = [
-        "# Houdini Oracle Coverage",
+        "# Oracle Coverage",
         "",
-        "This report compares `hip-reader` output with Houdini API oracle JSON.",
+        "This report compares `hou-scene-inspector` output with Oracle JSON.",
         "",
         "## Summary",
         "",
@@ -104,7 +104,7 @@ def format_matrix_report(payload: dict[str, Any]) -> str:
                 lines.append(
                     "- "
                     f"{mismatch['kind']} at `{mismatch['path']}`: "
-                    f"hip-reader={_short_repr(mismatch['hip_reader'])}, "
+                    f"hou-scene-inspector={_short_repr(mismatch['hou_scene_inspector'])}, "
                     f"oracle={_short_repr(mismatch['oracle'])}"
                 )
             lines.append("")
