@@ -2,12 +2,10 @@
 
 `.hip scene-structure inspection`.
 
-The current reader handles Houdini `.hip` files saved by Houdini 21.0 as old
-portable CPIO archives whose record names mirror the operator tree. The package
-can list records, inspect global metadata, reconstruct node hierarchy, resolve
-simple graph connections, parse parameters/channels/spare parameter templates,
-list take overrides, preserve binary records, diff archive records, and export
-JSON reports.
+The current reader handles Houdini `.hip` files, it can list records, inspect 
+global metadata, reconstruct node hierarchy, resolve simple graph connections, 
+parse parameters/channels/spare parameter templates, list take overrides, 
+preserve binary records, diff archive records, and export JSON reports.
 
 It does not cook or evaluate Houdini networks.
 
@@ -23,18 +21,6 @@ For local development, clone the repository and run:
 uv sync
 uv run pytest
 ```
-
-## Legal / Scope Note
-
-This is an independent, unofficial project for inspecting user-created `.hip`
-scene structure. It is not affiliated with, endorsed by, sponsored by, or
-supported by SideFX. Houdini and SideFX are trademarks of Side Effects Software
-Inc.; those names are used here only to identify file compatibility context.
-
-This repository does not include SideFX source code, binaries, documentation,
-logos, sample assets, or proprietary production files. It must not be used to
-bypass license, commercial/non-commercial, security, watermarking, entitlement,
-or usage restrictions.
 
 ## Usage
 
@@ -110,3 +96,15 @@ requiring Houdini at test runtime.
 
 `hou-scene-inspector` is released under the MIT License. See
 [LICENSE](LICENSE).
+
+## Legal / Scope Note
+
+This is an independent, unofficial project for inspecting user-created `.hip`
+scene structure. It is not affiliated with, endorsed by, sponsored by, or
+supported by SideFX. Houdini and SideFX are trademarks of Side Effects Software
+Inc.; those names are used here only to identify file compatibility context.
+
+This repository does not include SideFX source code, binaries, documentation,
+logos, sample assets, or proprietary production files. It must not be used to
+bypass license, commercial/non-commercial, security, watermarking, entitlement,
+or usage restrictions.
