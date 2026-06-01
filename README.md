@@ -11,6 +11,19 @@ JSON reports.
 
 It does not cook or evaluate Houdini networks.
 
+## Install
+
+```powershell
+uv tool install git+https://github.com/Ahmed-Hindy/hou-scene-inspector
+```
+
+For local development, clone the repository and run:
+
+```powershell
+uv sync
+uv run pytest
+```
+
 ## Legal / Scope Note
 
 This is an independent, unofficial project for inspecting user-created `.hip`
@@ -92,3 +105,8 @@ uv run hou-scene-inspector oracle-matrix --refresh --hython "C:\Program Files\Si
 Committed Oracle snapshots live under `tests/fixtures/oracles/`, so normal
 `uv run pytest` can validate the parser against structural truth without
 requiring Houdini at test runtime.
+
+## License
+
+`hou-scene-inspector` is released under the MIT License. See
+[LICENSE](LICENSE).

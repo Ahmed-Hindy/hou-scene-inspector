@@ -3,11 +3,28 @@ name = "hou-scene-inspector"
 version = "0.1.0"
 description = ".hip scene-structure inspection"
 readme = "README.md"
+license = "MIT"
 authors = [
     { name = "Ahmed Hindy", email = "Ahmed.hindy96@gmail.com" }
 ]
 requires-python = ">=3.11"
+keywords = ["houdini", "hip", "scene-inspection", "cpio"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
 dependencies = []
+
+[project.urls]
+Repository = "https://github.com/Ahmed-Hindy/hou-scene-inspector"
+Issues = "https://github.com/Ahmed-Hindy/hou-scene-inspector/issues"
 
 [project.scripts]
 hou-scene-inspector = "hou_scene_inspector.cli:main"
