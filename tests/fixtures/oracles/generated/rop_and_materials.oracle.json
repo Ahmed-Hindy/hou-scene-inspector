@@ -1,0 +1,3264 @@
+{
+  "connections": [],
+  "hip_file": "generated/rop_and_materials.hip",
+  "houdini_version": "21.0.631",
+  "nodes": [
+    {
+      "channels": {
+        "baseBump_useTexture": {
+          "expression": "ch(\"baseBumpAndNormal_enable\") && strcmp(chs(\"baseBumpAndNormal_type\"), \"bump\") == 0",
+          "keyframes": [
+            {
+              "expression": "ch(\"baseBumpAndNormal_enable\") && strcmp(chs(\"baseBumpAndNormal_type\"), \"bump\") == 0",
+              "frame": 1.0,
+              "value": 0.0
+            }
+          ],
+          "parm_tuple": "baseBump_useTexture",
+          "raw_value": "ch(\"baseBumpAndNormal_enable\") && strcmp(chs(\"baseBumpAndNormal_type\"), \"bump\") == 0"
+        },
+        "baseNormal_useTexture": {
+          "expression": "ch(\"baseBumpAndNormal_enable\") && strcmp(chs(\"baseBumpAndNormal_type\"), \"normal\") == 0",
+          "keyframes": [
+            {
+              "expression": "ch(\"baseBumpAndNormal_enable\") && strcmp(chs(\"baseBumpAndNormal_type\"), \"normal\") == 0",
+              "frame": 1.0,
+              "value": 0.0
+            }
+          ],
+          "parm_tuple": "baseNormal_useTexture",
+          "raw_value": "ch(\"baseBumpAndNormal_enable\") && strcmp(chs(\"baseBumpAndNormal_type\"), \"normal\") == 0"
+        },
+        "shop_disable_displace_shader": {
+          "expression": "!ch(\"dispInput_enable\") && !ch(\"dispTex_enable\") && !ch(\"dispNoise_enable\")",
+          "keyframes": [
+            {
+              "expression": "!ch(\"dispInput_enable\") && !ch(\"dispTex_enable\") && !ch(\"dispNoise_enable\")",
+              "frame": 1.0,
+              "value": 0.0
+            }
+          ],
+          "parm_tuple": "shop_disable_displace_shader",
+          "raw_value": "!ch(\"dispInput_enable\") && !ch(\"dispTex_enable\") && !ch(\"dispNoise_enable\")"
+        },
+        "specular_tint": {
+          "expression": "(1-ch(\"metallic\"))*ch(\"reflecttint\")",
+          "keyframes": [
+            {
+              "expression": "(1-ch(\"metallic\"))*ch(\"reflecttint\")",
+              "frame": 1.0,
+              "value": 0.0
+            }
+          ],
+          "parm_tuple": "specular_tint",
+          "raw_value": "(1-ch(\"metallic\"))*ch(\"reflecttint\")"
+        },
+        "vm_displacebound": {
+          "expression": "1.01*ch(\"dispInput_enable\")*ch(\"dispInput_max\") + ch(\"dispTex_enable\")*max(abs((1.0+ch(\"dispTex_offset\"))*ch(\"dispTex_scale\")), abs(ch(\"dispTex_offset\")*ch(\"dispTex_scale\"))) + ch(\"dispNoise_enable\")*abs(ch(\"dispNoise_amp\"))",
+          "keyframes": [
+            {
+              "expression": "1.01*ch(\"dispInput_enable\")*ch(\"dispInput_max\") + ch(\"dispTex_enable\")*max(abs((1.0+ch(\"dispTex_offset\"))*ch(\"dispTex_scale\")), abs(ch(\"dispTex_offset\")*ch(\"dispTex_scale\"))) + ch(\"dispNoise_enable\")*abs(ch(\"dispNoise_amp\"))",
+              "frame": 1.0,
+              "value": 0.0
+            }
+          ],
+          "parm_tuple": "vm_displacebound",
+          "raw_value": "1.01*ch(\"dispInput_enable\")*ch(\"dispInput_max\") + ch(\"dispTex_enable\")*max(abs((1.0+ch(\"dispTex_offset\"))*ch(\"dispTex_scale\")), abs(ch(\"dispTex_offset\")*ch(\"dispTex_scale\"))) + ch(\"dispNoise_enable\")*abs(ch(\"dispNoise_amp\"))"
+        }
+      },
+      "children": [],
+      "connections": [],
+      "flags": {
+        "bypass": false,
+        "display": false,
+        "hard_locked": false,
+        "render": false,
+        "template": false
+      },
+      "name": "principledshader1",
+      "node_type": "principledshader::2.0",
+      "parent_path": "/mat",
+      "parms": {
+        "Ab": {
+          "component_names": [
+            "Ab1",
+            "Ab2",
+            "Ab3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "Alpha": {
+          "component_names": [
+            "Alpha"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "Cd": {
+          "component_names": [
+            "Cdr",
+            "Cdg",
+            "Cdb"
+          ],
+          "raw_values": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "Ce": {
+          "component_names": [
+            "Ce1",
+            "Ce2",
+            "Ce3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "Cu": {
+          "component_names": [
+            "Cu1",
+            "Cu2",
+            "Cu3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "Cv": {
+          "component_names": [
+            "Cv1",
+            "Cv2",
+            "Cv3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "Ds": {
+          "component_names": [
+            "Ds1",
+            "Ds2",
+            "Ds3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "Dt": {
+          "component_names": [
+            "Dt1",
+            "Dt2",
+            "Dt3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "Nt": {
+          "component_names": [
+            "Nt1",
+            "Nt2",
+            "Nt3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "Oc": {
+          "component_names": [
+            "Oc1",
+            "Oc2",
+            "Oc3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "Th": {
+          "component_names": [
+            "Th1",
+            "Th2",
+            "Th3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "Vd": {
+          "component_names": [
+            "Vd1",
+            "Vd2",
+            "Vd3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "Vdt": {
+          "component_names": [
+            "Vdt1",
+            "Vdt2",
+            "Vdt3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "absorption": {
+          "component_names": [
+            "absorption1",
+            "absorption2",
+            "absorption3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "albedomult": {
+          "component_names": [
+            "albedomult"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "all": {
+          "component_names": [
+            "all1",
+            "all2",
+            "all3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "all_comp": {
+          "component_names": [
+            "all_comp"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "all_emission": {
+          "component_names": [
+            "all_emission1",
+            "all_emission2",
+            "all_emission3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "alphablendmode": {
+          "component_names": [
+            "alphablendmode"
+          ],
+          "raw_values": [
+            "blend"
+          ]
+        },
+        "alphacutoff": {
+          "component_names": [
+            "alphacutoff"
+          ],
+          "raw_values": [
+            "0.5"
+          ]
+        },
+        "aniso": {
+          "component_names": [
+            "aniso"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "aniso_monoChannel": {
+          "component_names": [
+            "aniso_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "aniso_texture": {
+          "component_names": [
+            "aniso_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "aniso_textureColorSpace": {
+          "component_names": [
+            "aniso_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "aniso_textureWrap": {
+          "component_names": [
+            "aniso_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "aniso_useTexture": {
+          "component_names": [
+            "aniso_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "anisodir": {
+          "component_names": [
+            "anisodir"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "anisodir_monoChannel": {
+          "component_names": [
+            "anisodir_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "anisodir_texture": {
+          "component_names": [
+            "anisodir_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "anisodir_textureColorSpace": {
+          "component_names": [
+            "anisodir_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "anisodir_textureFilter": {
+          "component_names": [
+            "anisodir_textureFilter"
+          ],
+          "raw_values": [
+            "point"
+          ]
+        },
+        "anisodir_textureWrap": {
+          "component_names": [
+            "anisodir_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "anisodir_useTexture": {
+          "component_names": [
+            "anisodir_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "baseBumpAndNormal_enable": {
+          "component_names": [
+            "baseBumpAndNormal_enable"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "baseBumpAndNormal_type": {
+          "component_names": [
+            "baseBumpAndNormal_type"
+          ],
+          "raw_values": [
+            "normal"
+          ]
+        },
+        "baseBump_bumpScale": {
+          "component_names": [
+            "baseBump_bumpScale"
+          ],
+          "raw_values": [
+            "0.05"
+          ]
+        },
+        "baseBump_bumpTexture": {
+          "component_names": [
+            "baseBump_bumpTexture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "baseBump_channel": {
+          "component_names": [
+            "baseBump_channel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "baseBump_colorSpace": {
+          "component_names": [
+            "baseBump_colorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "baseBump_filter": {
+          "component_names": [
+            "baseBump_filter"
+          ],
+          "raw_values": [
+            "gauss"
+          ]
+        },
+        "baseBump_filterWidth": {
+          "component_names": [
+            "baseBump_filterWidth"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "baseBump_imagePlane": {
+          "component_names": [
+            "baseBump_imagePlane"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "baseBump_useTexture": {
+          "component_names": [
+            "baseBump_useTexture"
+          ],
+          "raw_values": [
+            "ch(\"baseBumpAndNormal_enable\") && strcmp(chs(\"baseBumpAndNormal_type\"), \"bump\") == 0"
+          ]
+        },
+        "baseBump_wrap": {
+          "component_names": [
+            "baseBump_wrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "baseN": {
+          "component_names": [
+            "baseN1",
+            "baseN2",
+            "baseN3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "baseNormal_channel": {
+          "component_names": [
+            "baseNormal_channel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "baseNormal_colorspace": {
+          "component_names": [
+            "baseNormal_colorspace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "baseNormal_filter": {
+          "component_names": [
+            "baseNormal_filter"
+          ],
+          "raw_values": [
+            "gauss"
+          ]
+        },
+        "baseNormal_filterWidth": {
+          "component_names": [
+            "baseNormal_filterWidth"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "baseNormal_flipX": {
+          "component_names": [
+            "baseNormal_flipX"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "baseNormal_flipY": {
+          "component_names": [
+            "baseNormal_flipY"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "baseNormal_imagePlane": {
+          "component_names": [
+            "baseNormal_imagePlane"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "baseNormal_scale": {
+          "component_names": [
+            "baseNormal_scale"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "baseNormal_space": {
+          "component_names": [
+            "baseNormal_space"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "baseNormal_texture": {
+          "component_names": [
+            "baseNormal_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "baseNormal_useTexture": {
+          "component_names": [
+            "baseNormal_useTexture"
+          ],
+          "raw_values": [
+            "ch(\"baseBumpAndNormal_enable\") && strcmp(chs(\"baseBumpAndNormal_type\"), \"normal\") == 0"
+          ]
+        },
+        "baseNormal_vectorSpace": {
+          "component_names": [
+            "baseNormal_vectorSpace"
+          ],
+          "raw_values": [
+            "uvtangent"
+          ]
+        },
+        "baseNormal_wrap": {
+          "component_names": [
+            "baseNormal_wrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "basecolor": {
+          "component_names": [
+            "basecolorr",
+            "basecolorg",
+            "basecolorb"
+          ],
+          "raw_values": [
+            "0.2",
+            "0.2",
+            "0.2"
+          ]
+        },
+        "basecolor_texture": {
+          "component_names": [
+            "basecolor_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "basecolor_textureColorSpace": {
+          "component_names": [
+            "basecolor_textureColorSpace"
+          ],
+          "raw_values": [
+            "auto"
+          ]
+        },
+        "basecolor_textureIntensity": {
+          "component_names": [
+            "basecolor_textureIntensity"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "basecolor_textureWrap": {
+          "component_names": [
+            "basecolor_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "basecolor_usePackedColor": {
+          "component_names": [
+            "basecolor_usePackedColor"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "basecolor_usePointColor": {
+          "component_names": [
+            "basecolor_usePointColor"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "basecolor_useTexture": {
+          "component_names": [
+            "basecolor_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "basecolor_useTextureAlpha": {
+          "component_names": [
+            "basecolor_useTextureAlpha"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "coat": {
+          "component_names": [
+            "coat"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "coatBumpAndNormal_enable": {
+          "component_names": [
+            "coatBumpAndNormal_enable"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "coatBumpAndNormal_type": {
+          "component_names": [
+            "coatBumpAndNormal_type"
+          ],
+          "raw_values": [
+            "normal"
+          ]
+        },
+        "coatBump_bumpScale": {
+          "component_names": [
+            "coatBump_bumpScale"
+          ],
+          "raw_values": [
+            "0.05"
+          ]
+        },
+        "coatBump_bumpTexture": {
+          "component_names": [
+            "coatBump_bumpTexture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "coatBump_channel": {
+          "component_names": [
+            "coatBump_channel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "coatBump_colorSpace": {
+          "component_names": [
+            "coatBump_colorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "coatBump_filter": {
+          "component_names": [
+            "coatBump_filter"
+          ],
+          "raw_values": [
+            "gauss"
+          ]
+        },
+        "coatBump_filterWidth": {
+          "component_names": [
+            "coatBump_filterWidth"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "coatBump_imagePlane": {
+          "component_names": [
+            "coatBump_imagePlane"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "coatBump_wrap": {
+          "component_names": [
+            "coatBump_wrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "coatN": {
+          "component_names": [
+            "coatN1",
+            "coatN2",
+            "coatN3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "coatNormal_channel": {
+          "component_names": [
+            "coatNormal_channel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "coatNormal_colorspace": {
+          "component_names": [
+            "coatNormal_colorspace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "coatNormal_filter": {
+          "component_names": [
+            "coatNormal_filter"
+          ],
+          "raw_values": [
+            "gauss"
+          ]
+        },
+        "coatNormal_filterWidth": {
+          "component_names": [
+            "coatNormal_filterWidth"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "coatNormal_flipX": {
+          "component_names": [
+            "coatNormal_flipX"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "coatNormal_flipY": {
+          "component_names": [
+            "coatNormal_flipY"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "coatNormal_imagePlane": {
+          "component_names": [
+            "coatNormal_imagePlane"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "coatNormal_scale": {
+          "component_names": [
+            "coatNormal_scale"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "coatNormal_space": {
+          "component_names": [
+            "coatNormal_space"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "coatNormal_texture": {
+          "component_names": [
+            "coatNormal_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "coatNormal_vectorSpace": {
+          "component_names": [
+            "coatNormal_vectorSpace"
+          ],
+          "raw_values": [
+            "uvtangent"
+          ]
+        },
+        "coatNormal_wrap": {
+          "component_names": [
+            "coatNormal_wrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "coat_monoChannel": {
+          "component_names": [
+            "coat_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "coat_texture": {
+          "component_names": [
+            "coat_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "coat_textureColorSpace": {
+          "component_names": [
+            "coat_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "coat_textureWrap": {
+          "component_names": [
+            "coat_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "coat_useTexture": {
+          "component_names": [
+            "coat_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "coatlabel": {
+          "component_names": [
+            "coatlabel"
+          ],
+          "raw_values": [
+            "coat"
+          ]
+        },
+        "coatrough": {
+          "component_names": [
+            "coatrough"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "coatrough_monoChannel": {
+          "component_names": [
+            "coatrough_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "coatrough_texture": {
+          "component_names": [
+            "coatrough_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "coatrough_textureColorSpace": {
+          "component_names": [
+            "coatrough_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "coatrough_textureWrap": {
+          "component_names": [
+            "coatrough_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "coatrough_useTexture": {
+          "component_names": [
+            "coatrough_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "coatspecmodel": {
+          "component_names": [
+            "coatspecmodel"
+          ],
+          "raw_values": [
+            "ggx"
+          ]
+        },
+        "difflabel": {
+          "component_names": [
+            "difflabel"
+          ],
+          "raw_values": [
+            "diffuse"
+          ]
+        },
+        "diffuse_folder_14_3": {
+          "component_names": [
+            "diffuse_folder_14_3"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "diffuse_folder_15": {
+          "component_names": [
+            "diffuse_folder_151"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "diffuselevel": {
+          "component_names": [
+            "diffuselevel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "direct": {
+          "component_names": [
+            "direct1",
+            "direct2",
+            "direct3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "direct_comp": {
+          "component_names": [
+            "direct_comp"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "direct_emission": {
+          "component_names": [
+            "direct_emission1",
+            "direct_emission2",
+            "direct_emission3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "direct_noshadow": {
+          "component_names": [
+            "direct_noshadow1",
+            "direct_noshadow2",
+            "direct_noshadow3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "direct_noshadow_comp": {
+          "component_names": [
+            "direct_noshadow_comp"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "direct_samples": {
+          "component_names": [
+            "direct_samples"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "direct_shadow": {
+          "component_names": [
+            "direct_shadow1",
+            "direct_shadow2",
+            "direct_shadow3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "disp": {
+          "component_names": [
+            "disp"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "dispInput_enable": {
+          "component_names": [
+            "dispInput_enable"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "dispInput_max": {
+          "component_names": [
+            "dispInput_max"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "dispInput_vectorspace": {
+          "component_names": [
+            "dispInput_vectorspace"
+          ],
+          "raw_values": [
+            "uvtangent"
+          ]
+        },
+        "dispNoise_amp": {
+          "component_names": [
+            "dispNoise_amp"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "dispNoise_atten": {
+          "component_names": [
+            "dispNoise_atten"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "dispNoise_enable": {
+          "component_names": [
+            "dispNoise_enable"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "dispNoise_freq": {
+          "component_names": [
+            "dispNoise_freq1",
+            "dispNoise_freq2",
+            "dispNoise_freq3"
+          ],
+          "raw_values": [
+            "10",
+            "10",
+            "10"
+          ]
+        },
+        "dispNoise_offset": {
+          "component_names": [
+            "dispNoise_offset1",
+            "dispNoise_offset2",
+            "dispNoise_offset3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "dispNoise_rough": {
+          "component_names": [
+            "dispNoise_rough"
+          ],
+          "raw_values": [
+            "0.5"
+          ]
+        },
+        "dispNoise_turb": {
+          "component_names": [
+            "dispNoise_turb"
+          ],
+          "raw_values": [
+            "5"
+          ]
+        },
+        "dispNoise_type": {
+          "component_names": [
+            "dispNoise_type"
+          ],
+          "raw_values": [
+            "xnoise"
+          ]
+        },
+        "dispTex_channel": {
+          "component_names": [
+            "dispTex_channel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "dispTex_channelOrder": {
+          "component_names": [
+            "dispTex_channelOrder"
+          ],
+          "raw_values": [
+            "xyz"
+          ]
+        },
+        "dispTex_colorSpace": {
+          "component_names": [
+            "dispTex_colorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "dispTex_enable": {
+          "component_names": [
+            "dispTex_enable"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "dispTex_filter": {
+          "component_names": [
+            "dispTex_filter"
+          ],
+          "raw_values": [
+            "gauss"
+          ]
+        },
+        "dispTex_filterWidth": {
+          "component_names": [
+            "dispTex_filterWidth"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "dispTex_offset": {
+          "component_names": [
+            "dispTex_offset"
+          ],
+          "raw_values": [
+            "-0.5"
+          ]
+        },
+        "dispTex_scale": {
+          "component_names": [
+            "dispTex_scale"
+          ],
+          "raw_values": [
+            "0.05"
+          ]
+        },
+        "dispTex_texture": {
+          "component_names": [
+            "dispTex_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "dispTex_type": {
+          "component_names": [
+            "dispTex_type"
+          ],
+          "raw_values": [
+            "disp"
+          ]
+        },
+        "dispTex_vectorSpace": {
+          "component_names": [
+            "dispTex_vectorSpace"
+          ],
+          "raw_values": [
+            "uvtangent"
+          ]
+        },
+        "dispTex_wrap": {
+          "component_names": [
+            "dispTex_wrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "dispersion": {
+          "component_names": [
+            "dispersion"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "dispersion_monoChannel": {
+          "component_names": [
+            "dispersion_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "dispersion_texture": {
+          "component_names": [
+            "dispersion_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "dispersion_textureColorSpace": {
+          "component_names": [
+            "dispersion_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "dispersion_textureWrap": {
+          "component_names": [
+            "dispersion_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "dispersion_useTexture": {
+          "component_names": [
+            "dispersion_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "displayColor": {
+          "component_names": [
+            "displayColorr",
+            "displayColorg",
+            "displayColorb"
+          ],
+          "raw_values": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "displayOpacity": {
+          "component_names": [
+            "displayOpacity"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "emitcolor": {
+          "component_names": [
+            "emitcolorr",
+            "emitcolorg",
+            "emitcolorb"
+          ],
+          "raw_values": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "emitcolor_texture": {
+          "component_names": [
+            "emitcolor_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "emitcolor_textureColorSpace": {
+          "component_names": [
+            "emitcolor_textureColorSpace"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "emitcolor_textureIntensity": {
+          "component_names": [
+            "emitcolor_textureIntensity"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "emitcolor_textureWrap": {
+          "component_names": [
+            "emitcolor_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "emitcolor_usePointColor": {
+          "component_names": [
+            "emitcolor_usePointColor"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "emitcolor_useTexture": {
+          "component_names": [
+            "emitcolor_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "emitillum": {
+          "component_names": [
+            "emitillum"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "emitint": {
+          "component_names": [
+            "emitint"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "fakecausticsenabled": {
+          "component_names": [
+            "fakecausticsenabled"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "fakecausticsopacity": {
+          "component_names": [
+            "fakecausticsopacity"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "fakecausticsshadow": {
+          "component_names": [
+            "fakecausticsshadow"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "fakecausticstransmit": {
+          "component_names": [
+            "fakecausticstransmit"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "folder0": {
+          "component_names": [
+            "folder0"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder1": {
+          "component_names": [
+            "folder1"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder10": {
+          "component_names": [
+            "folder10"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder11": {
+          "component_names": [
+            "folder11"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "folder12": {
+          "component_names": [
+            "folder12"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "folder13": {
+          "component_names": [
+            "folder13"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "folder14": {
+          "component_names": [
+            "folder14"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder15": {
+          "component_names": [
+            "folder15"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder16": {
+          "component_names": [
+            "folder16"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder17": {
+          "component_names": [
+            "folder17"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder18": {
+          "component_names": [
+            "folder18"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder2": {
+          "component_names": [
+            "folder2"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder226": {
+          "component_names": [
+            "folder226"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder227": {
+          "component_names": [
+            "folder227"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder228": {
+          "component_names": [
+            "folder228"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder229": {
+          "component_names": [
+            "folder229"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder230": {
+          "component_names": [
+            "folder230"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder231": {
+          "component_names": [
+            "folder231"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder232": {
+          "component_names": [
+            "folder232"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder233": {
+          "component_names": [
+            "folder233"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder234": {
+          "component_names": [
+            "folder234"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder235": {
+          "component_names": [
+            "folder235"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder236": {
+          "component_names": [
+            "folder236"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder237": {
+          "component_names": [
+            "folder237"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder238": {
+          "component_names": [
+            "folder238"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder239": {
+          "component_names": [
+            "folder239"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder3": {
+          "component_names": [
+            "folder3"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder3_1": {
+          "component_names": [
+            "folder3_1"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder4": {
+          "component_names": [
+            "folder4"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "folder5": {
+          "component_names": [
+            "folder5"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder54": {
+          "component_names": [
+            "folder54"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder55": {
+          "component_names": [
+            "folder55"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder5_1": {
+          "component_names": [
+            "folder5_1"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder5_2": {
+          "component_names": [
+            "folder5_2"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder6": {
+          "component_names": [
+            "folder6"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder7": {
+          "component_names": [
+            "folder7"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "folder8": {
+          "component_names": [
+            "folder8"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "folder9": {
+          "component_names": [
+            "folder9"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "frontface": {
+          "component_names": [
+            "frontface"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "indirect": {
+          "component_names": [
+            "indirect1",
+            "indirect2",
+            "indirect3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "indirect_comp": {
+          "component_names": [
+            "indirect_comp"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "indirect_emission": {
+          "component_names": [
+            "indirect_emission1",
+            "indirect_emission2",
+            "indirect_emission3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "indirect_noshadow": {
+          "component_names": [
+            "indirect_noshadow1",
+            "indirect_noshadow2",
+            "indirect_noshadow3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "indirect_noshadow_comp": {
+          "component_names": [
+            "indirect_noshadow_comp"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "indirect_samples": {
+          "component_names": [
+            "indirect_samples"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "indirect_shadow": {
+          "component_names": [
+            "indirect_shadow1",
+            "indirect_shadow2",
+            "indirect_shadow3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "ior": {
+          "component_names": [
+            "ior"
+          ],
+          "raw_values": [
+            "1.5"
+          ]
+        },
+        "ior_monoChannel": {
+          "component_names": [
+            "ior_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ior_texture": {
+          "component_names": [
+            "ior_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "ior_textureColorSpace": {
+          "component_names": [
+            "ior_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "ior_textureWrap": {
+          "component_names": [
+            "ior_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "ior_useTexture": {
+          "component_names": [
+            "ior_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "layer": {
+          "component_names": [
+            "layer"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "level": {
+          "component_names": [
+            "level"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "metallic": {
+          "component_names": [
+            "metallic"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "metallic_monoChannel": {
+          "component_names": [
+            "metallic_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "metallic_texture": {
+          "component_names": [
+            "metallic_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "metallic_textureColorSpace": {
+          "component_names": [
+            "metallic_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "metallic_textureWrap": {
+          "component_names": [
+            "metallic_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "metallic_useTexture": {
+          "component_names": [
+            "metallic_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "nddispersion": {
+          "component_names": [
+            "nddispersion"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ndior": {
+          "component_names": [
+            "ndior"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ndpriority": {
+          "component_names": [
+            "ndpriority"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "nlights": {
+          "component_names": [
+            "nlights"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "occlusion_texture": {
+          "component_names": [
+            "occlusion_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "occlusion_textureColorSpace": {
+          "component_names": [
+            "occlusion_textureColorSpace"
+          ],
+          "raw_values": [
+            "auto"
+          ]
+        },
+        "occlusion_textureIntensity": {
+          "component_names": [
+            "occlusion_textureIntensity"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "occlusion_textureWrap": {
+          "component_names": [
+            "occlusion_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "occlusion_useTexture": {
+          "component_names": [
+            "occlusion_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "opac": {
+          "component_names": [
+            "opac"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "opaccolor": {
+          "component_names": [
+            "opaccolorr",
+            "opaccolorg",
+            "opaccolorb"
+          ],
+          "raw_values": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "opaccolor_texture": {
+          "component_names": [
+            "opaccolor_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "opaccolor_textureColorSpace": {
+          "component_names": [
+            "opaccolor_textureColorSpace"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "opaccolor_textureIntensity": {
+          "component_names": [
+            "opaccolor_textureIntensity"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "opaccolor_textureWrap": {
+          "component_names": [
+            "opaccolor_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "opaccolor_useTexture": {
+          "component_names": [
+            "opaccolor_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "opacpackedalpha": {
+          "component_names": [
+            "opacpackedalpha"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "opacpointalpha": {
+          "component_names": [
+            "opacpointalpha"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "pre_disp_N": {
+          "component_names": [
+            "pre_disp_N1",
+            "pre_disp_N2",
+            "pre_disp_N3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "pre_disp_P": {
+          "component_names": [
+            "pre_disp_P1",
+            "pre_disp_P2",
+            "pre_disp_P3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "pre_disp_utan": {
+          "component_names": [
+            "pre_disp_utan1",
+            "pre_disp_utan2",
+            "pre_disp_utan3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "pre_disp_vtan": {
+          "component_names": [
+            "pre_disp_vtan1",
+            "pre_disp_vtan2",
+            "pre_disp_vtan3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "priority": {
+          "component_names": [
+            "priority"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "reflect": {
+          "component_names": [
+            "reflect"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "reflect_monoChannel": {
+          "component_names": [
+            "reflect_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "reflect_texture": {
+          "component_names": [
+            "reflect_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "reflect_textureColorSpace": {
+          "component_names": [
+            "reflect_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "reflect_textureWrap": {
+          "component_names": [
+            "reflect_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "reflect_useTexture": {
+          "component_names": [
+            "reflect_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "reflecttint": {
+          "component_names": [
+            "reflecttint"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "reflecttint_monoChannel": {
+          "component_names": [
+            "reflecttint_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "reflecttint_texture": {
+          "component_names": [
+            "reflecttint_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "reflecttint_textureColorSpace": {
+          "component_names": [
+            "reflecttint_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "reflecttint_textureWrap": {
+          "component_names": [
+            "reflecttint_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "reflecttint_useTexture": {
+          "component_names": [
+            "reflecttint_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "refllabel": {
+          "component_names": [
+            "refllabel"
+          ],
+          "raw_values": [
+            "reflect"
+          ]
+        },
+        "refractlabel": {
+          "component_names": [
+            "refractlabel"
+          ],
+          "raw_values": [
+            "refract"
+          ]
+        },
+        "rough": {
+          "component_names": [
+            "rough"
+          ],
+          "raw_values": [
+            "0.3"
+          ]
+        },
+        "rough_monoChannel": {
+          "component_names": [
+            "rough_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "rough_texture": {
+          "component_names": [
+            "rough_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "rough_textureColorSpace": {
+          "component_names": [
+            "rough_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "rough_textureWrap": {
+          "component_names": [
+            "rough_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "rough_useTexture": {
+          "component_names": [
+            "rough_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "roundedEdge_enable": {
+          "component_names": [
+            "roundedEdge_enable"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "roundedEdge_mode": {
+          "component_names": [
+            "roundedEdge_mode"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "roundedEdge_radius": {
+          "component_names": [
+            "roundedEdge_radius"
+          ],
+          "raw_values": [
+            "0.01"
+          ]
+        },
+        "separateCoatNormals": {
+          "component_names": [
+            "separateCoatNormals"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "shading_16": {
+          "component_names": [
+            "shading_161"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "sheen": {
+          "component_names": [
+            "sheen"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "sheen_monoChannel": {
+          "component_names": [
+            "sheen_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "sheen_texture": {
+          "component_names": [
+            "sheen_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "sheen_textureColorSpace": {
+          "component_names": [
+            "sheen_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "sheen_textureWrap": {
+          "component_names": [
+            "sheen_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "sheen_useTexture": {
+          "component_names": [
+            "sheen_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "sheentint": {
+          "component_names": [
+            "sheentint"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "sheentint_monoChannel": {
+          "component_names": [
+            "sheentint_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "sheentint_texture": {
+          "component_names": [
+            "sheentint_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "sheentint_textureColorSpace": {
+          "component_names": [
+            "sheentint_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "sheentint_textureWrap": {
+          "component_names": [
+            "sheentint_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "sheentint_useTexture": {
+          "component_names": [
+            "sheentint_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "shop_disable_displace_shader": {
+          "component_names": [
+            "shop_disable_displace_shader"
+          ],
+          "raw_values": [
+            "!ch(\"dispInput_enable\") && !ch(\"dispTex_enable\") && !ch(\"dispNoise_enable\")"
+          ]
+        },
+        "speccolor": {
+          "component_names": [
+            "speccolorr",
+            "speccolorg",
+            "speccolorb"
+          ],
+          "raw_values": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "specmodel": {
+          "component_names": [
+            "specmodel"
+          ],
+          "raw_values": [
+            "ggx"
+          ]
+        },
+        "specular_tint": {
+          "component_names": [
+            "specular_tint"
+          ],
+          "raw_values": [
+            "(1-ch(\"metallic\"))*ch(\"reflecttint\")"
+          ]
+        },
+        "specularlevel": {
+          "component_names": [
+            "specularlevel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "sss": {
+          "component_names": [
+            "sss"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "sss_monoChannel": {
+          "component_names": [
+            "sss_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "sss_texture": {
+          "component_names": [
+            "sss_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "sss_textureColorSpace": {
+          "component_names": [
+            "sss_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "sss_textureWrap": {
+          "component_names": [
+            "sss_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "sss_useTexture": {
+          "component_names": [
+            "sss_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ssscolor": {
+          "component_names": [
+            "ssscolorr",
+            "ssscolorg",
+            "ssscolorb"
+          ],
+          "raw_values": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "ssscolor_texture": {
+          "component_names": [
+            "ssscolor_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "ssscolor_textureColorSpace": {
+          "component_names": [
+            "ssscolor_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "ssscolor_textureWrap": {
+          "component_names": [
+            "ssscolor_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "ssscolor_usePointColor": {
+          "component_names": [
+            "ssscolor_usePointColor"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ssscolor_useTexture": {
+          "component_names": [
+            "ssscolor_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "sssdist": {
+          "component_names": [
+            "sssdist"
+          ],
+          "raw_values": [
+            "0.1"
+          ]
+        },
+        "sssdist_monoChannel": {
+          "component_names": [
+            "sssdist_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "sssdist_texture": {
+          "component_names": [
+            "sssdist_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "sssdist_textureColorSpace": {
+          "component_names": [
+            "sssdist_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "sssdist_textureWrap": {
+          "component_names": [
+            "sssdist_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "sssdist_useTexture": {
+          "component_names": [
+            "sssdist_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ssslabel": {
+          "component_names": [
+            "ssslabel"
+          ],
+          "raw_values": [
+            "sss"
+          ]
+        },
+        "sssmodel": {
+          "component_names": [
+            "sssmodel"
+          ],
+          "raw_values": [
+            "pbrsss"
+          ]
+        },
+        "sssphase": {
+          "component_names": [
+            "sssphase"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "st": {
+          "component_names": [
+            "st1",
+            "st2"
+          ],
+          "raw_values": [
+            "0",
+            "0"
+          ]
+        },
+        "surface_textureFilter": {
+          "component_names": [
+            "surface_textureFilter"
+          ],
+          "raw_values": [
+            "catrom"
+          ]
+        },
+        "surface_textureFilterWidth": {
+          "component_names": [
+            "surface_textureFilterWidth"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "transcolor": {
+          "component_names": [
+            "transcolorr",
+            "transcolorg",
+            "transcolorb"
+          ],
+          "raw_values": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "transcolor_texture": {
+          "component_names": [
+            "transcolor_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "transcolor_textureColorSpace": {
+          "component_names": [
+            "transcolor_textureColorSpace"
+          ],
+          "raw_values": [
+            "auto"
+          ]
+        },
+        "transcolor_textureIntensity": {
+          "component_names": [
+            "transcolor_textureIntensity"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "transcolor_textureWrap": {
+          "component_names": [
+            "transcolor_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "transcolor_usePointColor": {
+          "component_names": [
+            "transcolor_usePointColor"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "transcolor_useTexture": {
+          "component_names": [
+            "transcolor_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "transdist": {
+          "component_names": [
+            "transdist"
+          ],
+          "raw_values": [
+            "0.1"
+          ]
+        },
+        "transdist_monoChannel": {
+          "component_names": [
+            "transdist_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "transdist_texture": {
+          "component_names": [
+            "transdist_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "transdist_textureColorSpace": {
+          "component_names": [
+            "transdist_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "transdist_textureWrap": {
+          "component_names": [
+            "transdist_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "transdist_useTexture": {
+          "component_names": [
+            "transdist_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "transparency": {
+          "component_names": [
+            "transparency"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "transparency_monoChannel": {
+          "component_names": [
+            "transparency_monoChannel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "transparency_texture": {
+          "component_names": [
+            "transparency_texture"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "transparency_textureColorSpace": {
+          "component_names": [
+            "transparency_textureColorSpace"
+          ],
+          "raw_values": [
+            "linear"
+          ]
+        },
+        "transparency_textureWrap": {
+          "component_names": [
+            "transparency_textureWrap"
+          ],
+          "raw_values": [
+            "repeat"
+          ]
+        },
+        "transparency_useTexture": {
+          "component_names": [
+            "transparency_useTexture"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "uvrot": {
+          "component_names": [
+            "uvrot"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "uvscale": {
+          "component_names": [
+            "uvscale1",
+            "uvscale2"
+          ],
+          "raw_values": [
+            "1",
+            "1"
+          ]
+        },
+        "uvtrans": {
+          "component_names": [
+            "uvtrans1",
+            "uvtrans2"
+          ],
+          "raw_values": [
+            "0",
+            "0"
+          ]
+        },
+        "vdisp": {
+          "component_names": [
+            "vdisp1",
+            "vdisp2",
+            "vdisp3"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "vm_bumpraydisplace": {
+          "component_names": [
+            "vm_bumpraydisplace"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "vm_displacebound": {
+          "component_names": [
+            "vm_displacebound"
+          ],
+          "raw_values": [
+            "1.01*ch(\"dispInput_enable\")*ch(\"dispInput_max\") + ch(\"dispTex_enable\")*max(abs((1.0+ch(\"dispTex_offset\"))*ch(\"dispTex_scale\")), abs(ch(\"dispTex_offset\")*ch(\"dispTex_scale\"))) + ch(\"dispNoise_enable\")*abs(ch(\"dispNoise_amp\"))"
+          ]
+        },
+        "vm_truedisplace": {
+          "component_names": [
+            "vm_truedisplace"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "volumelevel": {
+          "component_names": [
+            "volumelevel"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        }
+      },
+      "path": "/mat/principledshader1",
+      "position": [
+        0.0,
+        0.0
+      ],
+      "type_definition": {
+        "has_definition": true,
+        "library_file_path": "C:\\Program Files\\Side Effects Software\\Houdini 21.0.631\\houdini\\otls\\OPlibVop.hda",
+        "node_type_name": "principledshader::2.0"
+      },
+      "userdata": {
+        "___Version___": "",
+        "___toolcount___": "176",
+        "___toolid___": "convertGallery",
+        "__inputgroup_Bump & Normals": "collapsed",
+        "__inputgroup_Displacement": "collapsed",
+        "__inputgroup_Opacity": "collapsed",
+        "__inputgroup_Settings": "collapsed",
+        "__inputgroup_Surface": "collapsed",
+        "__inputgroup_Textures": "collapsed"
+      }
+    },
+    {
+      "channels": {
+        "f1": {
+          "expression": "$FSTART",
+          "keyframes": [
+            {
+              "expression": "$FSTART",
+              "frame": 1.0,
+              "value": 1.0
+            }
+          ],
+          "parm_tuple": "f",
+          "raw_value": "$FSTART"
+        },
+        "f2": {
+          "expression": "$FEND",
+          "keyframes": [
+            {
+              "expression": "$FEND",
+              "frame": 1.0,
+              "value": 240.0
+            }
+          ],
+          "parm_tuple": "f",
+          "raw_value": "$FEND"
+        }
+      },
+      "children": [],
+      "connections": [],
+      "flags": {
+        "bypass": false,
+        "display": false,
+        "hard_locked": false,
+        "render": false,
+        "template": false
+      },
+      "name": "geometry1",
+      "node_type": "geometry",
+      "parent_path": "/out",
+      "parms": {
+        "alfprogress": {
+          "component_names": [
+            "alfprogress"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "execute": {
+          "component_names": [
+            "execute"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "executebackground": {
+          "component_names": [
+            "executebackground"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "f": {
+          "component_names": [
+            "f1",
+            "f2",
+            "f3"
+          ],
+          "raw_values": [
+            "$FSTART",
+            "$FEND",
+            "1"
+          ]
+        },
+        "initsim": {
+          "component_names": [
+            "initsim"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "lpostframe": {
+          "component_names": [
+            "lpostframe"
+          ],
+          "raw_values": [
+            "hscript"
+          ]
+        },
+        "lpostrender": {
+          "component_names": [
+            "lpostrender"
+          ],
+          "raw_values": [
+            "hscript"
+          ]
+        },
+        "lpostwrite": {
+          "component_names": [
+            "lpostwrite"
+          ],
+          "raw_values": [
+            "hscript"
+          ]
+        },
+        "lpreframe": {
+          "component_names": [
+            "lpreframe"
+          ],
+          "raw_values": [
+            "hscript"
+          ]
+        },
+        "lprerender": {
+          "component_names": [
+            "lprerender"
+          ],
+          "raw_values": [
+            "hscript"
+          ]
+        },
+        "mkpath": {
+          "component_names": [
+            "mkpath"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "postframe": {
+          "component_names": [
+            "postframe"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "postrender": {
+          "component_names": [
+            "postrender"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "postwrite": {
+          "component_names": [
+            "postwrite"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "preframe": {
+          "component_names": [
+            "preframe"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "prerender": {
+          "component_names": [
+            "prerender"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "renderdialog": {
+          "component_names": [
+            "renderdialog"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "reportnetwork": {
+          "component_names": [
+            "reportnetwork"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "savebackground": {
+          "component_names": [
+            "savebackground"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "saveretry": {
+          "component_names": [
+            "saveretry"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "sopoutput": {
+          "component_names": [
+            "sopoutput"
+          ],
+          "raw_values": [
+            "$HIP/geo/$HIPNAME.$OS.$F.bgeo.sc"
+          ]
+        },
+        "soppath": {
+          "component_names": [
+            "soppath"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "take": {
+          "component_names": [
+            "take"
+          ],
+          "raw_values": [
+            "_current_"
+          ]
+        },
+        "tpostframe": {
+          "component_names": [
+            "tpostframe"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "tpostrender": {
+          "component_names": [
+            "tpostrender"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "tpostwrite": {
+          "component_names": [
+            "tpostwrite"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "tpreframe": {
+          "component_names": [
+            "tpreframe"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "tprerender": {
+          "component_names": [
+            "tprerender"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "trange": {
+          "component_names": [
+            "trange"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "xformtype": {
+          "component_names": [
+            "xformtype"
+          ],
+          "raw_values": [
+            "none"
+          ]
+        }
+      },
+      "path": "/out/geometry1",
+      "position": [
+        0.0,
+        0.0
+      ],
+      "type_definition": {
+        "has_definition": false,
+        "library_file_path": "",
+        "node_type_name": ""
+      },
+      "userdata": {
+        "___Version___": "21.0.631"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "source": "houdini-hython",
+  "takes": [
+    {
+      "children": [],
+      "name": "Main",
+      "parent": ""
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "ch": [],
+  "img": [],
+  "mat": [],
+  "obj": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "box1",
+              "node_type": "box",
+              "path": "/obj/geo1/subnet1/box1"
+            },
+            {
+              "children": [],
+              "name": "xform1",
+              "node_type": "xform",
+              "path": "/obj/geo1/subnet1/xform1"
+            }
+          ],
+          "name": "subnet1",
+          "node_type": "subnet",
+          "path": "/obj/geo1/subnet1"
+        }
+      ],
+      "name": "geo1",
+      "node_type": "geo",
+      "path": "/obj/geo1"
+    }
+  ],
+  "out": [],
+  "shop": [],
+  "stage": [],
+  "tasks": [],
+  "vex": []
+}

@@ -1,0 +1,1591 @@
+{
+  "connections": [],
+  "hip_file": "generated/renamed_node.hip",
+  "houdini_version": "21.0.631",
+  "nodes": [
+    {
+      "channels": {
+        "ar_matte": {
+          "expression": "ch(\"vm_matte\")",
+          "keyframes": [
+            {
+              "expression": "ch(\"vm_matte\")",
+              "frame": 1.0,
+              "value": 0.0
+            }
+          ],
+          "parm_tuple": "ar_matte",
+          "raw_value": "ch(\"vm_matte\")"
+        },
+        "ar_mb_velocity_enable": {
+          "expression": "ch(\"geo_velocityblur\")",
+          "keyframes": [
+            {
+              "expression": "ch(\"geo_velocityblur\")",
+              "frame": 1.0,
+              "value": 0.0
+            }
+          ],
+          "parm_tuple": "ar_mb_velocity_enable",
+          "raw_value": "ch(\"geo_velocityblur\")"
+        },
+        "ar_point_scale": {
+          "expression": "ch(\"vm_pointscale\")",
+          "keyframes": [
+            {
+              "expression": "ch(\"vm_pointscale\")",
+              "frame": 1.0,
+              "value": 0.0
+            }
+          ],
+          "parm_tuple": "ar_point_scale",
+          "raw_value": "ch(\"vm_pointscale\")"
+        }
+      },
+      "children": [],
+      "connections": [],
+      "flags": {
+        "bypass": false,
+        "display": true,
+        "hard_locked": false,
+        "render": false,
+        "template": false
+      },
+      "name": "myGeo",
+      "node_type": "geo",
+      "parent_path": "/obj",
+      "parms": {
+        "ar_agent_translate": {
+          "component_names": [
+            "ar_agent_translate"
+          ],
+          "raw_values": [
+            "unpack"
+          ]
+        },
+        "ar_aspect": {
+          "component_names": [
+            "ar_aspect"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "ar_attributes_detail": {
+          "component_names": [
+            "ar_attributes_detail"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "ar_attributes_point": {
+          "component_names": [
+            "ar_attributes_point"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "ar_attributes_primitive": {
+          "component_names": [
+            "ar_attributes_primitive"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "ar_attributes_vertex": {
+          "component_names": [
+            "ar_attributes_vertex"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "ar_autobump_visibility_camera": {
+          "component_names": [
+            "ar_autobump_visibility_camera"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_autobump_visibility_diffuse_reflect": {
+          "component_names": [
+            "ar_autobump_visibility_diffuse_reflect"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_autobump_visibility_diffuse_transmit": {
+          "component_names": [
+            "ar_autobump_visibility_diffuse_transmit"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_autobump_visibility_shadow": {
+          "component_names": [
+            "ar_autobump_visibility_shadow"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_autobump_visibility_specular_reflect": {
+          "component_names": [
+            "ar_autobump_visibility_specular_reflect"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_autobump_visibility_specular_transmit": {
+          "component_names": [
+            "ar_autobump_visibility_specular_transmit"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_autobump_visibility_subsurface": {
+          "component_names": [
+            "ar_autobump_visibility_subsurface"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_autobump_visibility_volume": {
+          "component_names": [
+            "ar_autobump_visibility_volume"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_compress": {
+          "component_names": [
+            "ar_compress"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_crowd_add_cd": {
+          "component_names": [
+            "ar_crowd_add_cd"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_crowd_cache_dir": {
+          "component_names": [
+            "ar_crowd_cache_dir"
+          ],
+          "raw_values": [
+            "$HIP"
+          ]
+        },
+        "ar_crowd_cache_mode": {
+          "component_names": [
+            "ar_crowd_cache_mode"
+          ],
+          "raw_values": [
+            "single"
+          ]
+        },
+        "ar_crowd_cache_name": {
+          "component_names": [
+            "ar_crowd_cache_name"
+          ],
+          "raw_values": [
+            "`strreplace(opfullpath('.'), '/', '_')`_agents`ifs(strcmp(chs(\"ar_crowd_cache_mode\"), \"single\"), \"\", \"_${F4}\")`"
+          ]
+        },
+        "ar_crowd_geo_attribs": {
+          "component_names": [
+            "ar_crowd_geo_attribs"
+          ],
+          "raw_values": [
+            "* ^__* ^usd*"
+          ]
+        },
+        "ar_crowd_output_mode": {
+          "component_names": [
+            "ar_crowd_output_mode"
+          ],
+          "raw_values": [
+            "relative"
+          ]
+        },
+        "ar_crowd_skel_attribs": {
+          "component_names": [
+            "ar_crowd_skel_attribs"
+          ],
+          "raw_values": [
+            "bounds transform"
+          ]
+        },
+        "ar_curves_basis": {
+          "component_names": [
+            "ar_curves_basis"
+          ],
+          "raw_values": [
+            "auto"
+          ]
+        },
+        "ar_curves_mode": {
+          "component_names": [
+            "ar_curves_mode"
+          ],
+          "raw_values": [
+            "ribbon"
+          ]
+        },
+        "ar_disp_autobump": {
+          "component_names": [
+            "ar_disp_autobump"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_disp_height": {
+          "component_names": [
+            "ar_disp_height"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "ar_disp_padding": {
+          "component_names": [
+            "ar_disp_padding"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ar_disp_zero_value": {
+          "component_names": [
+            "ar_disp_zero_value"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ar_grids": {
+          "component_names": [
+            "ar_grids"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "ar_interior_set": {
+          "component_names": [
+            "ar_interior_set"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "ar_invert_normals": {
+          "component_names": [
+            "ar_invert_normals"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_light_group": {
+          "component_names": [
+            "ar_light_group"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "ar_matte": {
+          "component_names": [
+            "ar_matte"
+          ],
+          "raw_values": [
+            "ch(\"vm_matte\")"
+          ]
+        },
+        "ar_mb_acceleration_attribute": {
+          "component_names": [
+            "ar_mb_acceleration_attribute"
+          ],
+          "raw_values": [
+            "force"
+          ]
+        },
+        "ar_mb_acceleration_enable": {
+          "component_names": [
+            "ar_mb_acceleration_enable"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_mb_dform_keys": {
+          "component_names": [
+            "ar_mb_dform_keys"
+          ],
+          "raw_values": [
+            "2"
+          ]
+        },
+        "ar_mb_dform_keys_override": {
+          "component_names": [
+            "ar_mb_dform_keys_override"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_mb_velocity_attribute": {
+          "component_names": [
+            "ar_mb_velocity_attribute"
+          ],
+          "raw_values": [
+            "v"
+          ]
+        },
+        "ar_mb_velocity_enable": {
+          "component_names": [
+            "ar_mb_velocity_enable"
+          ],
+          "raw_values": [
+            "ch(\"geo_velocityblur\")"
+          ]
+        },
+        "ar_mb_xform_keys": {
+          "component_names": [
+            "ar_mb_xform_keys"
+          ],
+          "raw_values": [
+            "2"
+          ]
+        },
+        "ar_mb_xform_keys_override": {
+          "component_names": [
+            "ar_mb_xform_keys_override"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_merge_vertex_indices": {
+          "component_names": [
+            "ar_merge_vertex_indices"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_min_pixel_width": {
+          "component_names": [
+            "ar_min_pixel_width"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ar_mipmap_bias": {
+          "component_names": [
+            "ar_mipmap_bias"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ar_mode": {
+          "component_names": [
+            "ar_mode"
+          ],
+          "raw_values": [
+            "sphere"
+          ]
+        },
+        "ar_opaque": {
+          "component_names": [
+            "ar_opaque"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_operator_graph": {
+          "component_names": [
+            "ar_operator_graph"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "ar_operator_graph_enable": {
+          "component_names": [
+            "ar_operator_graph_enable"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_padding": {
+          "component_names": [
+            "ar_padding"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ar_point_scale": {
+          "component_names": [
+            "ar_point_scale"
+          ],
+          "raw_values": [
+            "ch(\"vm_pointscale\")"
+          ]
+        },
+        "ar_radius": {
+          "component_names": [
+            "ar_radius"
+          ],
+          "raw_values": [
+            "0.05"
+          ]
+        },
+        "ar_receive_shadows": {
+          "component_names": [
+            "ar_receive_shadows"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_rotation": {
+          "component_names": [
+            "ar_rotation"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ar_self_shadows": {
+          "component_names": [
+            "ar_self_shadows"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_shadow_group": {
+          "component_names": [
+            "ar_shadow_group"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "ar_sidedness_camera": {
+          "component_names": [
+            "ar_sidedness_camera"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_sidedness_diffuse_reflect": {
+          "component_names": [
+            "ar_sidedness_diffuse_reflect"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_sidedness_diffuse_transmit": {
+          "component_names": [
+            "ar_sidedness_diffuse_transmit"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_sidedness_shadow": {
+          "component_names": [
+            "ar_sidedness_shadow"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_sidedness_specular_reflect": {
+          "component_names": [
+            "ar_sidedness_specular_reflect"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_sidedness_specular_transmit": {
+          "component_names": [
+            "ar_sidedness_specular_transmit"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_sidedness_volume": {
+          "component_names": [
+            "ar_sidedness_volume"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_skip": {
+          "component_names": [
+            "ar_skip"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_smoothing": {
+          "component_names": [
+            "ar_smoothing"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_step_scale": {
+          "component_names": [
+            "ar_step_scale"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "ar_step_size": {
+          "component_names": [
+            "ar_step_size"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ar_step_size_type": {
+          "component_names": [
+            "ar_step_size_type"
+          ],
+          "raw_values": [
+            "auto"
+          ]
+        },
+        "ar_subdiv_adaptive_error": {
+          "component_names": [
+            "ar_subdiv_adaptive_error"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "ar_subdiv_adaptive_metric": {
+          "component_names": [
+            "ar_subdiv_adaptive_metric"
+          ],
+          "raw_values": [
+            "auto"
+          ]
+        },
+        "ar_subdiv_adaptive_space": {
+          "component_names": [
+            "ar_subdiv_adaptive_space"
+          ],
+          "raw_values": [
+            "raster"
+          ]
+        },
+        "ar_subdiv_frustum_ignore": {
+          "component_names": [
+            "ar_subdiv_frustum_ignore"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_subdiv_iterations": {
+          "component_names": [
+            "ar_subdiv_iterations"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "ar_subdiv_smooth_derivs": {
+          "component_names": [
+            "ar_subdiv_smooth_derivs"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_subdiv_type": {
+          "component_names": [
+            "ar_subdiv_type"
+          ],
+          "raw_values": [
+            "none"
+          ]
+        },
+        "ar_subdiv_uv_smoothing": {
+          "component_names": [
+            "ar_subdiv_uv_smoothing"
+          ],
+          "raw_values": [
+            "pin_corners"
+          ]
+        },
+        "ar_tessellation_enable": {
+          "component_names": [
+            "ar_tessellation_enable"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_tessellation_style": {
+          "component_names": [
+            "ar_tessellation_style"
+          ],
+          "raw_values": [
+            "lod"
+          ]
+        },
+        "ar_tessellation_trimlod": {
+          "component_names": [
+            "ar_tessellation_trimlod"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "ar_tessellation_ulod": {
+          "component_names": [
+            "ar_tessellation_ulod"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "ar_tessellation_vlod": {
+          "component_names": [
+            "ar_tessellation_vlod"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "ar_toon_id": {
+          "component_names": [
+            "ar_toon_id"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "ar_trace_sets": {
+          "component_names": [
+            "ar_trace_sets"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "ar_transform_type": {
+          "component_names": [
+            "ar_transform_type"
+          ],
+          "raw_values": [
+            "rotate_about_center"
+          ]
+        },
+        "ar_use_light_group": {
+          "component_names": [
+            "ar_use_light_group"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_use_shadow_group": {
+          "component_names": [
+            "ar_use_shadow_group"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_user_options": {
+          "component_names": [
+            "ar_user_options"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "ar_user_options_enable": {
+          "component_names": [
+            "ar_user_options_enable"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_vdb_file": {
+          "component_names": [
+            "ar_vdb_file"
+          ],
+          "raw_values": [
+            "$HIP/`pythonexprs(\"hou.pwd().path()[1:].replace('/', '_')\")`.$F4.vdb"
+          ]
+        },
+        "ar_vdb_file_enable": {
+          "component_names": [
+            "ar_vdb_file_enable"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "ar_vdb_step_size": {
+          "component_names": [
+            "ar_vdb_step_size"
+          ],
+          "raw_values": [
+            "0.02"
+          ]
+        },
+        "ar_velocity_grids": {
+          "component_names": [
+            "ar_velocity_grids"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "ar_velocity_scale": {
+          "component_names": [
+            "ar_velocity_scale"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "ar_velocity_threshold": {
+          "component_names": [
+            "ar_velocity_threshold"
+          ],
+          "raw_values": [
+            "0.001"
+          ]
+        },
+        "ar_visibility_camera": {
+          "component_names": [
+            "ar_visibility_camera"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_visibility_diffuse_reflect": {
+          "component_names": [
+            "ar_visibility_diffuse_reflect"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_visibility_diffuse_transmit": {
+          "component_names": [
+            "ar_visibility_diffuse_transmit"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_visibility_shadow": {
+          "component_names": [
+            "ar_visibility_shadow"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_visibility_specular_reflect": {
+          "component_names": [
+            "ar_visibility_specular_reflect"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_visibility_specular_transmit": {
+          "component_names": [
+            "ar_visibility_specular_transmit"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_visibility_volume": {
+          "component_names": [
+            "ar_visibility_volume"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "ar_volume_padding": {
+          "component_names": [
+            "ar_volume_padding"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "bank": {
+          "component_names": [
+            "bank"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "caching": {
+          "component_names": [
+            "caching"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "categories": {
+          "component_names": [
+            "categories"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "childcomp": {
+          "component_names": [
+            "childcomp"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "constraints_on": {
+          "component_names": [
+            "constraints_on"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "constraints_path": {
+          "component_names": [
+            "constraints_path"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "dcolor": {
+          "component_names": [
+            "dcolorr",
+            "dcolorg",
+            "dcolorb"
+          ],
+          "raw_values": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "display": {
+          "component_names": [
+            "display"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "folder0": {
+          "component_names": [
+            "folder01"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder_autobump": {
+          "component_names": [
+            "folder_autobump"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder_points": {
+          "component_names": [
+            "folder_points1"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "folder_subdivision": {
+          "component_names": [
+            "folder_subdivision1"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "geo_accelattribute": {
+          "component_names": [
+            "geo_accelattribute"
+          ],
+          "raw_values": [
+            "accel"
+          ]
+        },
+        "geo_velocityblur": {
+          "component_names": [
+            "geo_velocityblur"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "group_usd_cache": {
+          "component_names": [
+            "group_usd_cache"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "group_usd_settings": {
+          "component_names": [
+            "group_usd_settings"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "keeppos": {
+          "component_names": [
+            "keeppos"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "label_volume": {
+          "component_names": [
+            "label_volume"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "label_volume2": {
+          "component_names": [
+            "label_volume2"
+          ],
+          "raw_values": [
+            "Points and polymeshes are rendered as volumes if Step Size > 0"
+          ]
+        },
+        "lightcategories": {
+          "component_names": [
+            "lightcategories"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "lightmask": {
+          "component_names": [
+            "lightmask"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "lookatpath": {
+          "component_names": [
+            "lookatpath"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "lookup": {
+          "component_names": [
+            "lookup"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "lookupobjpath": {
+          "component_names": [
+            "lookupobjpath"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "p": {
+          "component_names": [
+            "px",
+            "py",
+            "pz"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "pathobjpath": {
+          "component_names": [
+            "pathobjpath"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "pathorient": {
+          "component_names": [
+            "pathorient"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "picking": {
+          "component_names": [
+            "picking"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "pickscript": {
+          "component_names": [
+            "pickscript"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "pos": {
+          "component_names": [
+            "pos"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "pr": {
+          "component_names": [
+            "prx",
+            "pry",
+            "prz"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "pre_xform": {
+          "component_names": [
+            "pre_xform"
+          ],
+          "raw_values": [
+            "clean"
+          ]
+        },
+        "r": {
+          "component_names": [
+            "rx",
+            "ry",
+            "rz"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "rOrd": {
+          "component_names": [
+            "rOrd"
+          ],
+          "raw_values": [
+            "xyz"
+          ]
+        },
+        "reflectmask": {
+          "component_names": [
+            "reflectmask"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "refractmask": {
+          "component_names": [
+            "refractmask"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "roll": {
+          "component_names": [
+            "roll"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "s": {
+          "component_names": [
+            "sx",
+            "sy",
+            "sz"
+          ],
+          "raw_values": [
+            "1",
+            "1",
+            "1"
+          ]
+        },
+        "scale": {
+          "component_names": [
+            "scale"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "shop_geometrypath": {
+          "component_names": [
+            "shop_geometrypath"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "shop_materialopts": {
+          "component_names": [
+            "shop_materialopts"
+          ],
+          "raw_values": [
+            "override"
+          ]
+        },
+        "shop_materialpath": {
+          "component_names": [
+            "shop_materialpath"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "shop_propertiespath": {
+          "component_names": [
+            "shop_propertiespath"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "stdswitcher": {
+          "component_names": [
+            "stdswitcher1"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "stdswitcher4": {
+          "component_names": [
+            "stdswitcher41"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "t": {
+          "component_names": [
+            "tx",
+            "ty",
+            "tz"
+          ],
+          "raw_values": [
+            "0",
+            "0",
+            "0"
+          ]
+        },
+        "tdisplay": {
+          "component_names": [
+            "tdisplay"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "up": {
+          "component_names": [
+            "upx",
+            "upy",
+            "upz"
+          ],
+          "raw_values": [
+            "0",
+            "1",
+            "0"
+          ]
+        },
+        "uparmtype": {
+          "component_names": [
+            "uparmtype"
+          ],
+          "raw_values": [
+            "arc"
+          ]
+        },
+        "use_dcolor": {
+          "component_names": [
+            "use_dcolor"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "viewportlod": {
+          "component_names": [
+            "viewportlod"
+          ],
+          "raw_values": [
+            "full"
+          ]
+        },
+        "vm_coving": {
+          "component_names": [
+            "vm_coving"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "vm_curvesurface": {
+          "component_names": [
+            "vm_curvesurface"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vm_flatness": {
+          "component_names": [
+            "vm_flatness"
+          ],
+          "raw_values": [
+            "0.05"
+          ]
+        },
+        "vm_forcegeometry": {
+          "component_names": [
+            "vm_forcegeometry"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "vm_lpetag": {
+          "component_names": [
+            "vm_lpetag"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "vm_materialoverride": {
+          "component_names": [
+            "vm_materialoverride"
+          ],
+          "raw_values": [
+            "compact"
+          ]
+        },
+        "vm_matte": {
+          "component_names": [
+            "vm_matte"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vm_metavolume": {
+          "component_names": [
+            "vm_metavolume"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vm_osd_fvarinterp": {
+          "component_names": [
+            "vm_osd_fvarinterp"
+          ],
+          "raw_values": [
+            "4"
+          ]
+        },
+        "vm_osd_quality": {
+          "component_names": [
+            "vm_osd_quality"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "vm_osd_vtxinterp": {
+          "component_names": [
+            "vm_osd_vtxinterp"
+          ],
+          "raw_values": [
+            "2"
+          ]
+        },
+        "vm_overridedetail": {
+          "component_names": [
+            "vm_overridedetail"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vm_pointscale": {
+          "component_names": [
+            "vm_pointscale"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "vm_procuseroottransform": {
+          "component_names": [
+            "vm_procuseroottransform"
+          ],
+          "raw_values": [
+            "on"
+          ]
+        },
+        "vm_pscalediameter": {
+          "component_names": [
+            "vm_pscalediameter"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vm_raypredice": {
+          "component_names": [
+            "vm_raypredice"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "vm_rayshade": {
+          "component_names": [
+            "vm_rayshade"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vm_renderpoints": {
+          "component_names": [
+            "vm_renderpoints"
+          ],
+          "raw_values": [
+            "2"
+          ]
+        },
+        "vm_renderpointsas": {
+          "component_names": [
+            "vm_renderpointsas"
+          ],
+          "raw_values": [
+            "0"
+          ]
+        },
+        "vm_rendersubd": {
+          "component_names": [
+            "vm_rendersubd"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vm_rendersubdcurves": {
+          "component_names": [
+            "vm_rendersubdcurves"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vm_rendervisibility": {
+          "component_names": [
+            "vm_rendervisibility"
+          ],
+          "raw_values": [
+            "*"
+          ]
+        },
+        "vm_rmbackface": {
+          "component_names": [
+            "vm_rmbackface"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vm_shadingquality": {
+          "component_names": [
+            "vm_shadingquality"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "vm_subdgroup": {
+          "component_names": [
+            "vm_subdgroup"
+          ],
+          "raw_values": [
+            ""
+          ]
+        },
+        "vm_subdstyle": {
+          "component_names": [
+            "vm_subdstyle"
+          ],
+          "raw_values": [
+            "mantra_catclark"
+          ]
+        },
+        "vm_usenforpoints": {
+          "component_names": [
+            "vm_usenforpoints"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vm_volumefilter": {
+          "component_names": [
+            "vm_volumefilter"
+          ],
+          "raw_values": [
+            "box"
+          ]
+        },
+        "vm_volumefilterwidth": {
+          "component_names": [
+            "vm_volumefilterwidth"
+          ],
+          "raw_values": [
+            "1"
+          ]
+        },
+        "vport_displayassubdiv": {
+          "component_names": [
+            "vport_displayassubdiv"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vport_onionskin": {
+          "component_names": [
+            "vport_onionskin"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "vport_shadeopen": {
+          "component_names": [
+            "vport_shadeopen"
+          ],
+          "raw_values": [
+            "off"
+          ]
+        },
+        "xOrd": {
+          "component_names": [
+            "xOrd"
+          ],
+          "raw_values": [
+            "srt"
+          ]
+        }
+      },
+      "path": "/obj/myGeo",
+      "position": [
+        -4.0,
+        -1.0
+      ],
+      "type_definition": {
+        "has_definition": false,
+        "library_file_path": "",
+        "node_type_name": ""
+      },
+      "userdata": {
+        "___Version___": "21.0.631"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "source": "houdini-hython",
+  "takes": [
+    {
+      "children": [],
+      "name": "Main",
+      "parent": ""
+    }
+  ]
+}
